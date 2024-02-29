@@ -6,7 +6,7 @@
 
 ## About 
 
-In our project, we attempt to build a linear regression model that will predict the number of casualties from tornados using the width (yards) and length (miles) of the tornado. 
+In our project, we attempt to build a linear regression model that will predict the number of fatalities from tornados using the width (yards) and length (miles) of the tornado. 
 
 The data set that was used in this project is from the US NOAA's National Weather Service Storm Prediction Center Severe Weather Maps, Graphics, and Data Page. It was tidied and sourced from TidyTuesday and can be found here: https://github.com/rfordatascience/tidytuesday/tree/master/data/2023/2023-05-16. 
 
