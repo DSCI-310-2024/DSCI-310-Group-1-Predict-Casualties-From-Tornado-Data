@@ -1,6 +1,6 @@
 # DSCI-310-Project-Group-1
 
-## Predicting Casualties from Tornado Data 
+## Predicting Fatalities from Tornado Data 
 
 - Authors: Erika Delorme, Marcela Flaherty, Riddha Tuladhar, Edwin Yeung
 
