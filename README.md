@@ -17,7 +17,26 @@ Each row represents a tornado, along with various features, including width, len
 The final report can be found here:
 
 ## Usage 
+Clone this Github repository to your local machine. Whenever you want to run the data analysis, ensure your machine's current working directory is at the root of this repository.
 
+When you run the project for the **first** time, ensure your current working directory is at the root of this repository and enter the following in the terminal:
+``` bash
+conda env create --file environment.yml
+```
+
+Now whenever you want to run the analysis, ensure you are on this newly created environment by running:
+``` bash
+conda activate tornado_fatalities_predictor
+```
+
+Afterwards, open Jupyterlab by running:
+```bash
+jupyter lab
+```
+
+Once you are on Jupyter Lab, navigate to the `src` folder and open the `tornado_predictor.ipynb` file. 
+
+After you open the file, click on `Change Kernel...` under the `Kernel` tab, and select `R [conda env:tornado_fatalities_predictor]`. Restart the kernel and run all cells.
 ## Dependencies 
 
 ## License 
