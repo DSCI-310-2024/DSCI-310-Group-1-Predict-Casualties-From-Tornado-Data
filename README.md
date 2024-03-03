@@ -14,7 +14,7 @@ Each row represents a tornado, along with various features, including width, len
 
 ## Report 
 
-The final report can be found here:
+The final report can be found here: https://github.com/DSCI-310-2024/DSCI-310-Group-1-Predict-Fatalities-From-Tornado-Data/blob/main/src/tornado_fatalities_predictor.ipynb. 
 
 ## Usage 
 Clone this Github repository to your local machine. Whenever you want to run the data analysis, ensure your machine's current working directory is at the root of this repository.
@@ -53,5 +53,24 @@ Remaining dependencies are listed in [`environment.yml`](environment.yml). Nonet
 
 ## License 
 
+The tornado fatalities predictor report is under the Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0) License. See the license file for more information. The software code contained within this repository is licensed under the MIT license. See the license file for more information. 
+
 ## References 
 
+Angerer, P., Kluyver, T., Schulz, J., abielr, Sa, D. F. de, Hester, J., karldw, Foster, D., & Sievert, C. (2023, January 26). *repr (1.1.6): Serializable Representations*. https://cran.r-project.org/package=repr
+
+Chinchar, A. (2022, November 28). *Here’s Why the US has More Tornadoes than Any Other Country. CNN*. https://www.cnn.com/2022/11/28/weather/us-leads-tornado-numbers-tornado-alley-xpn/index.html
+
+Hadley Wickham, & RStudio. (2017). *tidyverse (2.0.0): Easily Install and Load the “Tidyverse.”* https://cran.r-project.org/package=tidyverse
+
+Kuhn , M., Wickham, H., Software, P., & PBC. (2023, August 24). *tidymodels (1.1.0): Easily Install and Load the “Tidymodels” Packages*. https://cran.r-project.org/package=tidymodels
+
+R Core Team. (2022). *R (4.3.2): A Language and Environment for Statistical Computing*. R Foundation for Statistical Computing. https://www.r-project.org/
+
+Revelle, W. (2019). *psych (2.3.3): Procedures for Psychological, Psychometric, and Personality Research*. https://cran.r-project.org/package=psych
+
+Schloerke, B., Cook, D., Larmarange, J., Briatte, F., Marbach, M., Thoen, E., Elberg, A., Toomet, O., Crowley, J., Hofmann, H., & Wickham, H. (2020, June 6). *GGally (2.1.2): Extension to “ggplot2.”* https://cran.r-project.org/package=GGally
+
+Storm Prediction Center. (2023, February 19). *F5 and EF5 tornadoes of the United States - 1950-present (SPC)*. Noaa.gov; NOAA’s National Weather Service. https://www.spc.noaa.gov/faq/tornado/f5torns.html 
+
+*tidytuesday/data/2023/2023-05-16 at master · rfordatascience/tidytuesday*. (n.d.). GitHub. https://github.com/rfordatascience/tidytuesday/tree/master/data/2023/2023-05-16
