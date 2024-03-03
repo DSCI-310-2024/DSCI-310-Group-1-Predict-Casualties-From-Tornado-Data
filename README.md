@@ -6,15 +6,13 @@
 
 ## About 
 
-In our project, we attempt to build a linear regression model that will predict the number of fatalities from tornados using the width (yards) and length (miles) of the tornado. 
+In our project, we attempt to build a multiple linear regression model that will predict the number of fatalities from tornadoes using the features width (yards) and length (miles) of the tornado. We tested our multilinear regression model with and without outliers and compared differences in coefficients and RMSPE scores. Both models had low positive coefficients, suggesting a minimal yet positive impact on the prediction of tornado fatalities, and both had low RMSPE scores, suggesting a low amount of error in its predictions. The model without outliers had a lower RMSPE score, which is partly explained by the lack of outliers and thus making predictions on a smaller range, which reduces the error. Despite the limitations of our model, we believe that it can still have some utility in predicting tornado fatalities with little error. However, the model should be improved in the future before being deployed to improve the size of the coefficients and its predictive power. In the future, we may consider exploring other features in predicting fatalities, predicting the number of injuries from the same features, or even predicting the number of casualties (injuries and fatalities) from the same and additional features. 
 
-The data set that was used in this project is from the US NOAA's National Weather Service Storm Prediction Center Severe Weather Maps, Graphics, and Data Page. It was tidied and sourced from TidyTuesday and can be found here: https://github.com/rfordatascience/tidytuesday/tree/master/data/2023/2023-05-16. 
-
-Each row represents a tornado, along with various features, including width, length, date, time, state in the US, magnitude, financial losses, number of fatalities, number of injuries, etc. 
+The data set that was used in this project is from the US NOAA's National Weather Service Storm Prediction Center Severe Weather Maps, Graphics, and Data Page. It was tidied and sourced from TidyTuesday and can be found [here](https://github.com/rfordatascience/tidytuesday/tree/master/data/2023/2023-05-16). Each row represents a tornado, along with various features, including width, length, date, time, state in the US, magnitude, financial losses, number of fatalities, number of injuries, etc. 
 
 ## Report 
 
-The final report can be found here: https://github.com/DSCI-310-2024/DSCI-310-Group-1-Predict-Fatalities-From-Tornado-Data/blob/main/src/tornado_fatalities_predictor.ipynb. 
+The final report can be found [here](https://github.com/DSCI-310-2024/DSCI-310-Group-1-Predict-Fatalities-From-Tornado-Data/blob/main/src/tornado_fatalities_predictor.ipynb). 
 
 ## Usage 
 Clone this Github repository to your local machine. Whenever you want to run the data analysis, ensure your machine's current working directory is at the root of this repository.
