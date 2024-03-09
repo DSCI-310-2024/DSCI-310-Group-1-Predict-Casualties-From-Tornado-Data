@@ -32,7 +32,7 @@ results/eda_01_numeric_features_summary_table.csv results/eda_02_correlation_plo
 	--out_file=results/eda_01_numeric_features_summary_table.csv results/eda_02_correlation_plot.png results/eda_03_width_vs_fatalities_scatterplot.png results/eda_04_length_vs_fatalities_scatterplot.png
 
 # create linear model
-results/01_training_linear_model_results_table.csv results/01_linear_model.rds: src/04_linear_model_construction data/processed/02_tornado_train_data.csv
+results/01_training_linear_model_results_table.csv results/01_linear_model.rds: src/04_linear_model_construction.R data/processed/02_tornado_train_data.csv
 	Rscript src/04_linear_model_construction.R \
 	--train=data/processed/02_tornado_train_data.csv \
 	--out_file=results/01_training_linear_model_results_table.csv results/01_linear_model.rds
