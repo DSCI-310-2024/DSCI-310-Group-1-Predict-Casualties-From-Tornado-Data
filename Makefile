@@ -1,7 +1,7 @@
 # Tornado Fatalities Predictor pipeline 
 
 # create whole analysis and report 
-all: report/tornado_fatalities_report.html
+all: report/tornado_fatalities_predictor_report.html
 
 # data 
 data: data/raw/raw_tornado_data.csv \
@@ -45,8 +45,8 @@ results/02_linear_model_test_scores_table.csv results/03_actual_vs_predicted_fat
 	--out_file=results/02_linear_model_test_scores_table.csv results/03_actual_vs_predicted_fatalities_plot.png results/04_fatalities_vs_width_plot.png results/05_fatalities_vs_length_plot.png results/06_boxplots_for_outliers.png results/07_linear_model_test_scores_without_outliers.csv results/08_actual_vs_predicted_fatalities_no_outliers.png results/09_fatalities_vs_width_plot_no_outliers.png results/10_fatalities_vs_length_plot_no_outliers.png
 
 # render report
-doc/tornado_fatalities_report.md: doc/tornado_fatalities_report.Rmd doc/tornado_refs.bib
-	Rscript -e "rmarkdown::render('doc/tornado_fatalities_report.Rmd')"
+doc/tornado_fatalities_predictor_report.md: doc/tornado_fatalities_predictor_report.Rmd doc/tornado_refs.bib
+	Rscript -e "rmarkdown::render('doc/tornado_fatalities_predictor_report.Rmd')"
 
 # clean data
 clean-data: 
@@ -59,7 +59,7 @@ clean-results:
 		results/02_linear_model_test_scores_table.csv results/03_actual_vs_predicted_fatalities_plot.png results/04_fatalities_vs_width_plot.png results/05_fatalities_vs_length_plot.png results/06_boxplots_for_outliers.png results/07_linear_model_test_scores_without_outliers.csv results/08_actual_vs_predicted_fatalities_no_outliers.png results/09_fatalities_vs_width_plot_no_outliers.png results/10_fatalities_vs_length_plot_no_outliers.png
 
 clean-doc: 
-	rm -f doc/tornado_fatalities_report.md doc/tornado_fatalities_report.html
+	rm -f doc/tornado_fatalities_predictor_report.md doc/tornado_fatalities_predictor_report.html
 
 clean-all: 
 	clean-data \
