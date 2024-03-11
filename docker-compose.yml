@@ -1,6 +1,6 @@
 services:
   analysis-env:
-    image: edsters78/tornado-fatalities-predictor:5f9a3e9
+    image: edsters78/tornado-fatalities-predictor:latest
     ports:
       - "8888:8888"
     volumes:
