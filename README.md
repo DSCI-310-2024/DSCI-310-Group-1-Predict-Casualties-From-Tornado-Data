@@ -36,7 +36,7 @@ Once you are on Jupyter Lab, navigate to the `src` folder and open the `tornado_
 
 After you open the file, click on `Change Kernel...` under the `Kernel` tab, and select `R [conda env:tornado_fatalities_predictor]`. Restart the kernel and run all cells.
 
-new draft (docker stuff): To shut down the container and clean up the resources, type `Cntrl` + `C` in the terminal where you launched the container, and then type `docker compose rm`. And then type y and enter when it asks you to confirm the container deletion.
+new draft (docker stuff): To shut down the container and clean up the resources, type `Cntrl` + `C` in the terminal where you launched the container, and then type `docker compose rm`. And then type y and enter when it asks you to confirm the container deletion. To work with project in vscode run the following code from the root of this project in a terminal in vscode: `docker compose run --rm analysis-env bash` this is contrary to the instructions in the example project (they don't work) needs further testing to ensure it works as intended
 
 ## Dependencies 
 - `conda` (version 24.1.2 or higher)
