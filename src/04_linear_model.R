@@ -3,7 +3,7 @@
 
 "This script reads specified data and creates a linear model, saving it to a RDS file and fitted model results as a CSV.
 
-Usage: 04_splot_model.R --file_path=<file_path> --results_path=<results_path> --model_path=<model_path>
+Usage: 04_splot_model.R --file_path=<file_path> --train_path=<train_path> --results_path=<results_path> --model_path=<model_path>
 
 Options:
 --file_path=<file_path>   Path to the data file
