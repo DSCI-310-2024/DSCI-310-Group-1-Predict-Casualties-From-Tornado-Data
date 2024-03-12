@@ -2,25 +2,24 @@
 
 "This script downloads the data from a specified URL and saves it to a specified local filepath.
 
-Usage: 01_download_data.r --url=<url> --file_path=<file_path>
+Usage: Rscript src/01_download_data.R --url=<url> 
 
 Options:
 --url=<url>               URL of the dataset location from the web or local file path
---file_path=<file_path>   The local filepath where you want to save the file and what to name it
 " -> doc
 
-library(tidyverse)
-library(docopt)
+suppressMessages(library(tidyverse))
+suppressWarnings(library(docopt))
 
 opt <- docopt(doc)
 
-main <- function(url, file_path) {
+main <- function(url) {
 
     # read in data from web
     data <- read_csv(url)
 
     # save the file in specified local filepath
-    write_csv(data, file_path)
+    write_csv(data, 'data/raw/raw_tornado_data.csv')
 }
 
-main(opt$url, opt$file_path)
+main(opt$url)
