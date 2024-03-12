@@ -5,8 +5,8 @@
 Usage: 01_download_data.r --url=<url> --file_path=<file_path>
 
 Options:
---url=<url>               URL of the dataset location from the web
---file_path=<file_path>   The local filepath where you want to save the file, and what to name it
+--url=<url>               URL of the dataset location from the web or local file path
+--file_path=<file_path>   The local filepath where you want to save the file and what to name it
 " -> doc
 
 library(tidyverse)
