@@ -14,7 +14,7 @@ The data set that was used in this project is from the US NOAA's National Weathe
 
 The final report can be found [here](https://github.com/DSCI-310-2024/DSCI-310-Group-1-Predict-Fatalities-From-Tornado-Data/blob/main/src/tornado_fatalities_predictor.ipynb). 
 
-## Usage 
+## Usage (outdated; milestone 1)
 Clone this Github repository to your local machine. Whenever you want to run the data analysis, ensure your machine's current working directory is at the root of this repository.
 
 When you run the project for the **first** time, ensure your current working directory is at the root of this repository and enter the following in the terminal:
@@ -40,6 +40,14 @@ new draft (docker stuff): To shut down the container and clean up the resources,
 
 ## Dependencies
 [Docker](https://www.docker.com/) is a container solution used to manage software dependencies for this project. The docker image in this project is based on the `quay.io/jupyter/r-notebook:r-4.3.2` image. Additional dependencies can be found in the [`Dockerfile`](Dockerfile).
+
+## Usage
+Follow the instructions below to reproduce the analysis.
+
+#### Setup
+1. [Install](https://www.docker.com/get-started/) Docker and launch it on your local machine.
+
+2. Clone this Github repository to your local machine.
 
 ## License 
 
