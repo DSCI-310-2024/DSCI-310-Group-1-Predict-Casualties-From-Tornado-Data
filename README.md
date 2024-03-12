@@ -38,18 +38,8 @@ After you open the file, click on `Change Kernel...` under the `Kernel` tab, and
 
 new draft (docker stuff): To shut down the container and clean up the resources, type `Cntrl` + `C` in the terminal where you launched the container, and then type `docker compose rm`. And then type y and enter when it asks you to confirm the container deletion. To work with project in vscode run the following code from the root of this project in a terminal in vscode: `docker compose run --rm analysis-env bash` this is contrary to the instructions in the example project (they don't work) needs further testing to ensure it works as intended
 
-## Dependencies 
-- `conda` (version 24.1.2 or higher)
-
-Remaining dependencies are listed in [`environment.yml`](environment.yml). Nonetheless, they will also be listed below:
-- `r-base` (version 4.1.3)
-- `jupyterlab` (version 4.1.2)
-- `nb_conda_kernels` (version 2.3.1)
-- `r-irkernel` (version 1.3.2)
-- `r-tidyverse` (version 2.0.0)
-- `r-tidymodels` (version 1.1.0)
-- `r-psych` (version 2.3.3)
-- `r-ggally` (version 2.1.2)
+## Dependencies
+[Docker](https://www.docker.com/) is a container solution used to manage software dependencies for this project. The docker image in this project is based on the `quay.io/jupyter/r-notebook:r-4.3.2` image. Additional dependencies can be found in the [`Dockerfile`](Dockerfile).
 
 ## License 
 
