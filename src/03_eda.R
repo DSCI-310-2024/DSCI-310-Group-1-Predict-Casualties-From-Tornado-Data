@@ -4,7 +4,7 @@
 functions that create either a visualization or a table. One main function runs all other 
 functions.
 
-Usage: src/03_eda.R --filepath=<filepath> 
+Usage: Rscript src/03_eda.R --filepath=<filepath> 
 
 Options:
 --filepath=<filepath>   Path to the data file
