@@ -28,8 +28,8 @@ create_summary_table <- function(filepath) {
     data <- read_csv(filepath)
   
     # create summary table 
-    summary_table <- data.frame(describe(data[, c('mag', 'injuries', 'fatalities', 'start_lat', 
-                'start_lon', 'end_lat', 'end_lon', 'length', 'width', 'ns')], fast = TRUE))
+    summary_table <- data.frame(describe(data[, c("mag", "injuries", "fatalities", "start_lat", 
+                "start_lon", "end_lat", "end_lon", "length", "width", "ns")], fast = TRUE))
 
     # save table as csv            
     write_csv(summary_table, "results/eda_01_numeric_features_summary_table.csv")
@@ -68,7 +68,7 @@ create_scatterplot_width_fatalities <- function(filepath) {
     # create scatterplot 
     options(repr.plot.width = 7, repr.plot.height = 7)
 
-    fatalities_width_scatterplot = ggplot(data, aes(x = width, y = fatalities)) +
+    fatalities_width_scatterplot <- ggplot(data, aes(x = width, y = fatalities)) +
     geom_point(alpha = 0.4) +
     xlab("Width (yards) of tornados") +
     ylab("Fatalities") +
@@ -89,7 +89,7 @@ create_scatterplot_length_fatalities <- function(filepath) {
     # create scatterplot 
     options(repr.plot.width = 7, repr.plot.height = 7)
 
-    fatalities_length_scatterplot = ggplot(data, aes(x = length, y = fatalities)) +
+    fatalities_length_scatterplot <- ggplot(data, aes(x = length, y = fatalities)) +
     geom_point(alpha = 0.4) +
     xlab("Length (miles) of tornados") +
     ylab("Fatalities") +
@@ -98,27 +98,4 @@ create_scatterplot_length_fatalities <- function(filepath) {
     
     # save plot as image png
     ggsave("results/eda_04_length_vs_fatalities_scatterplot.png", fatalities_length_scatterplot)
- 
 }
-
-#  define main function 
-main <- function(filepath) {
-  
-    # read in data
-    data <- read_csv(filepath)
-    
-    # create summary table 
-    create_summary_table(filepath)
-    
-    # create correlation matrix 
-    create_correlation_plot(filepath)
-
-    # create width vs fatalities scatterplot 
-    create_scatterplot_width_fatalities(filepath)
-
-    # create length vs fatalities scatterplot 
-    create_scatterplot_length_fatalities(filepath)
-  
-}
-
-main(opt$filepath)
