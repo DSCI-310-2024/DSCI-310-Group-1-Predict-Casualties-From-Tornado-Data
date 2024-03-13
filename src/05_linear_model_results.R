@@ -2,11 +2,16 @@
 before the exploratory data analysis or modelling takes place. It also
 splits the processed data into train and test sets.
 
-Usage: 05_linear_model_results.R --test_data=<test_data> --data_to=<data_to>
+This script creates takes the test data and linear regression model and uses
+them to create scatterplots used to assess the accuracy of the regression model.
+Additionally, this script creates boxplots from the test data to assess the 
+outliers in the data set.
+
+Usage: 05_linear_model_results.R --test_data=<test_data> --lm_fit=<lm_fit>
 
 Options:
 --test_data=<test_data>   Path to the test data
---data_to=<data_to>       Path to the directory where you want to save all processed data files
+--lm_fit=<lm_fit>         Linear regression model data
 " -> doc
 
 library(tidyverse)
@@ -19,7 +24,6 @@ main <- function(test_data, lm_fit) {
   
   # Read test data
   test_df <- read_csv(test_data)
-  
   
   # Make and store the linear model scores table
   lm_test_scores_table <- lm_fit |>
@@ -74,20 +78,30 @@ main <- function(test_data, lm_fit) {
   
   ggsave("results/04_fatalities_vs_length_plot.png", fatal_length_plot)
   
-  # # Create and store boxplot for tornado widths
-  # width_boxplot <- boxplot(test_df$width, main = "Boxplot of Tornado Widths", 
-  #                           ylab = "Values", xlab = "Tornado Width (Yards)")
-  # 
-  # 
-  # # Create and store boxplot for tornado lengths
-  # height_boxplot <- boxplot(test_df$length, main = "Boxplot of Tornado Lengths", 
-  #                            ylab = "Values", xlab = "Tornado Length (Miles)")
-  # 
-  # # Create and store boxplot for tornado fatalities
-  # fatalities_boxplot <- boxplot(test_df$fatalities, main = "Boxplot of Tornado Fatalities", 
-  #                               ylab = "Values", xlab = "Number of Fatalities")
+  # Create and store boxplot for tornado widths
+  width_boxplot <- ggplot(test_df, aes(y = width)) +
+    geom_boxplot() +
+    ggtitle("Boxplot of Tornado Widths") +
+    labs(x = "Tornado Width (Yards)", y = "Values")
+
+  ggsave("results/06_width_outlier_boxplot.png", width_boxplot)
+
+  # Create and store boxplot for tornado lengths
+  height_boxplot <- ggplot(test_df, aes(y = length)) +
+    geom_boxplot() +
+    ggtitle("Boxplot of Tornado Lengths") +
+    labs(x = "Tornado Length (Miles)", y = "Values")
   
+  ggsave("results/07_length_outlier_boxplot.png", length_boxplot)
+
+  # Create and store boxplot for tornado fatalities
+  fatalities_boxplot <- ggplot(test_df, aes(y = fatalities)) +
+    geom_boxplot() +
+    ggtitle("Boxplot of Tornado Fatalities") +
+    labs(x = "Number of Fatalities", y = "Values")
+  
+  ggsave("results/08_fatalities_outlier_boxplot.png", fatalities_boxplot)
   
 }
 
-main(opt$raw_data, opt$data_to, opt$seed)
+main(opt$test_data, opt$lm_fit)
