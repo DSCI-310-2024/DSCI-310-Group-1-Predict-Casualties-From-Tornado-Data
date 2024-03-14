@@ -10,7 +10,6 @@ data: data/raw/raw_tornado_data.csv \
 # download data
 data/raw/raw_tornado_data.csv: src/01_download_data.R
 	Rscript src/01_download_data.R \
-	--out_type=csv \
 	--url= https://raw.githubusercontent.com/rfordatascience/tidytuesday/a9e277dd77331e9091e151bb5adb584742064b3e/data/2023/2023-05-16/tornados.csv \
 	--out_file=data/raw/raw_tornado_data.csv
 
