@@ -50,6 +50,42 @@ main <- function(raw_data, data_to, seed) {
     # save training and testing sets to specified directory/filepath
     write_csv(train_df, file.path(data_to, "02_tornado_train_data.csv"))
     write_csv(test_df, file.path(data_to, "03_tornado_test_data.csv"))
+
+
+
+    # find first and third quartiles for tornado length and width
+    length_quartiles <- quantile(clean_data$length, probs = c(0.25, 0.75))
+    width_quartiles <- quantile(clean_data$width, probs = c(0.25, 0.75))
+  
+    # find interquartile range for tornado length and width
+    length_IQR <- IQR(clean_data$length)
+    width_IQR <- IQR(clean_data$width)
+  
+    # find fences for width and length
+    width_upper_fence <- width_quartiles[2] + (1.5 * width_IQR)
+    width_lower_fence <- width_quartiles[1] - (1.5 * width_IQR)
+    length_upper_fence <- length_quartiles[2] + (1.5 * length_IQR)
+    length_lower_fence <- length_quartiles[1] - (1.5 * length_IQR)
+  
+    # create and save dataframe containing no ourliers to a specified filepath
+    outlierless_df <- clean_data |>
+        filter(width < width_upper_fence) |>
+        filter(width > width_lower_fence) |>
+        filter(length < length_upper_fence) |>
+        filter(length > length_lower_fence)
+  
+    write.csv(outlierless_df, file.path(data_to, "tornado_outlierless.csv"))
+  
+
+
+  
+    # split save outlierless data into training and testind data to designated filepaths
+    outlierless_data_split <- initial_split(clean_data, prop = 0.75, strata = fatalities)
+    outlierless_train_df <- training(outlierless_data_split)
+    outlierless_test_df <- testing(outlierless_data_split)
+  
+    write_csv(outlierless_train_df, file.path(data_to, "tornado_train_outlierless.csv"))
+    write_csv(outlierless_test_df, file.path(data_to, "tornado_test_outlierless.csv"))
 }
 
 main(opt$raw_data, opt$data_to, opt$seed)
