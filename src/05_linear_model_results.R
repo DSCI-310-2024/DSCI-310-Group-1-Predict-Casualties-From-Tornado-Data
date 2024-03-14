@@ -3,16 +3,18 @@ them to create scatterplots used to assess the accuracy of the regression model.
 Additionally, this script creates boxplots from the test data to assess the 
 outliers in the data set.
 
-Usage: 05_linear_model_results.R --test_data=<test_data> --lin_fit=<lin_fit>
+Usage: 05_linear_model_results.R --test_data=<test_data> --outlierless_train<outlierless_train> --outlierless_test<outlierless_test>  --lin_fit=<lin_fit> 
 
 Options:
---test_data=<test_data>   Path to the test data
---lin_fit=<lin_fit>         Linear regression model data
+--test_data=<test_data>                 Path to the test data
+--outlierless_train<outlierless_train>  Path to training data with no outliers
+--outlierless_test<outlierless_test>    Path to testing data with no outliers
+--lin_fit=<lin_fit>                     Linear regression model data
 " -> doc
 
-library(tidyverse)
-library(tidymodels)
-library(docopt)
+suppressMessages(library(tidyverse))
+suppressMessages(library(tidymodels))
+suppressWarnings(library(docopt))
 
 opt <- docopt(doc)
 
