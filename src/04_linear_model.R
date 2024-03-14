@@ -37,10 +37,10 @@ main <- function(train_path, outlierless_train) {
   # Reading the outlierless training data
   train_data_o <- read_csv(outlierless_train)
   
-  # Create linear model and recipe
+  # Create linear model and recipe for outlierless data
   lm_recipe_o <- recipe(fatalities ~ width + length, data = train_data_o)
   
-  # Fit linear model and save to RDS
+  # Fit linear model for outlierless data and save to RDS
   outlierless_lm_fit <- workflow() %>%
     add_recipe(lm_recipe) %>%
     add_model(lm_spec) %>%
