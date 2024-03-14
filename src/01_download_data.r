@@ -2,7 +2,7 @@
 
 "This script downloads the data from a specified URL and saves it to a specified local filepath.
 
-Usage: Rscript src/01_download_data.r --url=<url> --file_path=<file_path>
+Usage: src/01_download_data.r --url=<url> --file_path=<file_path>
 
 Options:
 --url=<url>               URL of the dataset location from the web or local file path
