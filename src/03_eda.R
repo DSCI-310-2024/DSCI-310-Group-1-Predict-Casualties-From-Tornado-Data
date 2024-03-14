@@ -4,10 +4,10 @@
 functions that create either a visualization or a table. One main function runs all other 
 functions.
 
-Usage: src/03_eda.R --filepath=<filepath> 
+Usage: src/03_eda.R --file_path=<file_path> 
 
 Options:
---filepath=<filepath>   Path to the data file
+--file_path=<file_path>   Path to the data file
 " -> doc
 
 # import packages and libraries
@@ -22,10 +22,10 @@ suppressWarnings(library(docopt))
 opt <- docopt(doc)
 
 # create summary table 
-create_summary_table <- function(filepath) {
+create_summary_table <- function(file_path) {
   
     # read in data
-    data <- read_csv(filepath)
+    data <- read_csv(file_path)
   
     # create summary table 
     summary_table <- data.frame(describe(data[, c('mag', 'injuries', 'fatalities', 'start_lat', 
@@ -37,10 +37,10 @@ create_summary_table <- function(filepath) {
 }
 
 # create correlation plot
-create_correlation_plot <- function(filepath) {
+create_correlation_plot <- function(file_path) {
   
     # read in data
-    data <- read_csv(filepath)
+    data <- read_csv(file_path)
   
     # create correlation plot 
     options(repr.plot.width = 10, repr.plot.height = 10)
@@ -60,10 +60,10 @@ create_correlation_plot <- function(filepath) {
 }
 
 # create scatterplot width vs fatalities
-create_scatterplot_width_fatalities <- function(filepath) {
+create_scatterplot_width_fatalities <- function(file_path) {
   
     # read in data
-    data <- read_csv(filepath)
+    data <- read_csv(file_path)
   
     # create scatterplot 
     options(repr.plot.width = 7, repr.plot.height = 7)
@@ -81,10 +81,10 @@ create_scatterplot_width_fatalities <- function(filepath) {
 }
 
 # create scatterplot length vs fatalities 
-create_scatterplot_length_fatalities <- function(filepath) {
+create_scatterplot_length_fatalities <- function(file_path) {
   
     # read in data
-    data <- read_csv(filepath)
+    data <- read_csv(file_path)
   
     # create scatterplot 
     options(repr.plot.width = 7, repr.plot.height = 7)
@@ -102,23 +102,23 @@ create_scatterplot_length_fatalities <- function(filepath) {
 }
 
 #  define main function 
-main <- function(filepath) {
+main <- function(file_path) {
   
     # read in data
-    data <- read_csv(filepath)
+    data <- read_csv(file_path)
     
     # create summary table 
-    create_summary_table(filepath)
+    create_summary_table(file_path)
     
     # create correlation matrix 
-    create_correlation_plot(filepath)
+    create_correlation_plot(file_path)
 
     # create width vs fatalities scatterplot 
-    create_scatterplot_width_fatalities(filepath)
+    create_scatterplot_width_fatalities(file_path)
 
     # create length vs fatalities scatterplot 
-    create_scatterplot_length_fatalities(filepath)
+    create_scatterplot_length_fatalities(file_path)
   
 }
 
-main(opt$filepath)
+main(opt$file_path)
