@@ -4,32 +4,32 @@
 functions that create either a visualization or a table. One main function runs all other 
 functions.
 
-Usage: Rscript src/03_eda.R --file_path=<file_path> 
+Usage: src/03_eda.R --filepath=<filepath> 
 
 Options:
---file_path=<file_path>   Path to the data file
+--filepath=<filepath>   Path to the data file
 " -> doc
 
 # import packages and libraries
-library(repr)
-library(tidyverse)
-library(tidymodels)
-library(psych)
-library(GGally)
-library(docopt)
+suppressMessages(library(repr))
+suppressMessages(library(tidyverse))
+suppressMessages(library(tidymodels))
+suppressMessages(library(psych))
+suppressMessages(library(GGally))
+suppressWarnings(library(docopt))
 
 # parse/define command line arguments 
 opt <- docopt(doc)
 
 # create summary table 
-create_summary_table <- function(file_path) {
+create_summary_table <- function(filepath) {
   
     # read in data
-    data <- read_csv(file_path)
+    data <- read_csv(filepath)
   
     # create summary table 
-    summary_table <- data.frame(describe(data[, c("mag", "injuries", "fatalities", "start_lat", 
-                "start_lon", "end_lat", "end_lon", "length", "width", "ns")], fast = TRUE))
+    summary_table <- data.frame(describe(data[, c('mag', 'injuries', 'fatalities', 'start_lat', 
+                'start_lon', 'end_lat', 'end_lon', 'length', 'width', 'ns')], fast = TRUE))
 
     # save table as csv            
     write_csv(summary_table, "results/eda_01_numeric_features_summary_table.csv")
@@ -37,10 +37,10 @@ create_summary_table <- function(file_path) {
 }
 
 # create correlation plot
-create_correlation_plot <- function(file_path) {
+create_correlation_plot <- function(filepath) {
   
     # read in data
-    data <- read_csv(file_path)
+    data <- read_csv(filepath)
   
     # create correlation plot 
     options(repr.plot.width = 10, repr.plot.height = 10)
@@ -60,15 +60,15 @@ create_correlation_plot <- function(file_path) {
 }
 
 # create scatterplot width vs fatalities
-create_scatterplot_width_fatalities <- function(file_path) {
+create_scatterplot_width_fatalities <- function(filepath) {
   
     # read in data
-    data <- read_csv(file_path)
+    data <- read_csv(filepath)
   
     # create scatterplot 
     options(repr.plot.width = 7, repr.plot.height = 7)
 
-    fatalities_width_scatterplot <- ggplot(data, aes(x = width, y = fatalities)) +
+    fatalities_width_scatterplot = ggplot(data, aes(x = width, y = fatalities)) +
     geom_point(alpha = 0.4) +
     xlab("Width (yards) of tornados") +
     ylab("Fatalities") +
@@ -81,15 +81,15 @@ create_scatterplot_width_fatalities <- function(file_path) {
 }
 
 # create scatterplot length vs fatalities 
-create_scatterplot_length_fatalities <- function(file_path) {
+create_scatterplot_length_fatalities <- function(filepath) {
   
     # read in data
-    data <- read_csv(file_path)
+    data <- read_csv(filepath)
   
     # create scatterplot 
     options(repr.plot.width = 7, repr.plot.height = 7)
 
-    fatalities_length_scatterplot <- ggplot(data, aes(x = length, y = fatalities)) +
+    fatalities_length_scatterplot = ggplot(data, aes(x = length, y = fatalities)) +
     geom_point(alpha = 0.4) +
     xlab("Length (miles) of tornados") +
     ylab("Fatalities") +
@@ -98,26 +98,27 @@ create_scatterplot_length_fatalities <- function(file_path) {
     
     # save plot as image png
     ggsave("results/eda_04_length_vs_fatalities_scatterplot.png", fatalities_length_scatterplot)
+ 
 }
 
-# main function
-main <- function(file_path) {
-
+#  define main function 
+main <- function(filepath) {
+  
     # read in data
-    data <- read_csv(file_path)
-
+    data <- read_csv(filepath)
+    
     # create summary table 
-    create_summary_table(data)
-
+    create_summary_table(filepath)
+    
     # create correlation matrix 
-    create_correlation_plot(data)
+    create_correlation_plot(filepath)
 
     # create width vs fatalities scatterplot 
-    create_scatterplot_width_fatalities(data)
+    create_scatterplot_width_fatalities(filepath)
 
     # create length vs fatalities scatterplot 
-    create_scatterplot_length_fatalities(data)
-
+    create_scatterplot_length_fatalities(filepath)
+  
 }
 
-main(opt$file_path)
+main(opt$filepath)
