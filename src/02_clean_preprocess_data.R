@@ -74,18 +74,15 @@ main <- function(raw_data, data_to, seed) {
         filter(length < length_upper_fence) |>
         filter(length > length_lower_fence)
   
-    write.csv(outlierless_df, file.path(data_to, "tornado_outlierless.csv"))
-  
-
-
+    write.csv(outlierless_df, file.path(data_to, "04_tornado_outlierless.csv"))
   
     # split save outlierless data into training and testind data to designated filepaths
     outlierless_data_split <- initial_split(clean_data, prop = 0.75, strata = fatalities)
     outlierless_train_df <- training(outlierless_data_split)
     outlierless_test_df <- testing(outlierless_data_split)
   
-    write_csv(outlierless_train_df, file.path(data_to, "tornado_train_outlierless.csv"))
-    write_csv(outlierless_test_df, file.path(data_to, "tornado_test_outlierless.csv"))
+    write_csv(outlierless_train_df, file.path(data_to, "05_tornado_train_outlierless.csv"))
+    write_csv(outlierless_test_df, file.path(data_to, "06_tornado_test_outlierless.csv"))
 }
 
 main(opt$raw_data, opt$data_to, opt$seed)
