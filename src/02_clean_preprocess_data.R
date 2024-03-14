@@ -38,8 +38,6 @@ main <- function(raw_data, data_to, seed) {
     # save processed dataset to specified directory/filepath
     write_csv(clean_data, file.path(data_to, "01_processed_tornado_data.csv"))
 
-    
-
     # split the processed data into training and testing set
     set.seed(seed)
 
@@ -50,8 +48,6 @@ main <- function(raw_data, data_to, seed) {
     # save training and testing sets to specified directory/filepath
     write_csv(train_df, file.path(data_to, "02_tornado_train_data.csv"))
     write_csv(test_df, file.path(data_to, "03_tornado_test_data.csv"))
-
-
 
     # find first and third quartiles for tornado length and width
     length_quartiles <- quantile(clean_data$length, probs = c(0.25, 0.75))
