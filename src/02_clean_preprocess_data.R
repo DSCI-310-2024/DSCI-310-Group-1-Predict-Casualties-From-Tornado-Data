@@ -4,7 +4,7 @@
 before the exploratory data analysis or modelling takes place. It also
 splits the processed data into train and test sets.
 
-Usage: 02_clean_preprocess_data.R --raw_data=<raw_data> --data_to=<data_to> [--seed=<seed>]
+Usage: src/02_clean_preprocess_data.R --raw_data=<raw_data> --data_to=<data_to> [--seed=<seed>]
 
 Options:
 --raw_data=<raw_data>   Path to the raw data
