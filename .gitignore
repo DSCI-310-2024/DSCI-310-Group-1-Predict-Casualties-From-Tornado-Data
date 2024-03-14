@@ -1,5 +1,6 @@
 # Mac OS files
 **/.DS_Store
+**/.virtual_documents
 
 # Jupyter Notebook
 **/.ipynb_checkpoints

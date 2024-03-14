@@ -2,25 +2,21 @@
 # date: 2024-03-11
 
 "This script reads specified data and creates a linear model, saving it to a RDS file and fitted model results as a CSV.
-Usage: 04_splot_model.R --file_path=<file_path> --train_path=<train_path> --test_path=<test_path> --results_path=<results_path> --model_path=<model_path>
+Usage: src/04_linear_model.R --train_path=<train_path> --model_path=<model_path> --results_path=<results_path> 
 Options:
---file_path=<file_path>   Path to the data file
 --train_path=<train_path>     Path to the preprocessed training data file
 --model_path=<model_path>     Path to where the model will be saved (RDS)
 --results_path=<results_path>     Path to where the model results will be saved (CSV)
 " -> doc
 
-library(tidyverse)
-library(tidymodels)
-library(docopt)
+suppressMessages(library(tidyverse))
+suppressMessages(library(tidymodels))
+suppressWarnings(library(docopt))
 
 opt <- docopt(doc)
 
-main <- function(file_path, train_path, test_path, results_path, model_path) {
+main <- function(train_path, model_path, results_path) {
 
-  # Reading the file data
-  data <- read_csv(file_path)
-  
   # Reading the training data
   train_data <- read_csv(train_path)
   
@@ -45,4 +41,4 @@ main <- function(file_path, train_path, test_path, results_path, model_path) {
   write_csv(model_results, results_path)
 }
 
-main(opt$file_path, opt$train_path, opt$test_path, opt$results_path, opt$model_path)
+main(opt$train_path, opt$model_path, opt$results_path)
