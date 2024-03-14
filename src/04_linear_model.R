@@ -23,7 +23,7 @@ main <- function(train_path) {
     set_engine("lm") %>%
     set_mode("regression")
   
-  lm_recipe <- recipe(fatalities ~ width + length, data = data)
+  lm_recipe <- recipe(fatalities ~ width + length, data = train_data)
   
   # Fit linear model and save to RDS
   lm_fit <- workflow() %>%
@@ -33,10 +33,6 @@ main <- function(train_path) {
   
   saveRDS(lm_fit, "results/01_linear_model.rds")
   
-  # Extract and save model results to CSV
-  model_results <- tidy(lm_fit)
-  
-  write_csv(model_results, "results/01_training_linear_model_results_scores.csv")
 }
 
 main(opt$train_path)
