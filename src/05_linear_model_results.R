@@ -28,6 +28,8 @@ main <- function(test_data, outlierless_test, lin_fit, lin_fit_outlierless) {
   
   # Make and store the linear model scores table
   lm_test_scores_table <- lm_fit |>
+    predict(test_df) |>
+    bind_cols(test_df) |>
     metrics(truth = fatalities, estimate = .pred)
   
   write_csv(lm_test_scores_table, 
@@ -103,7 +105,7 @@ main <- function(test_data, outlierless_test, lin_fit, lin_fit_outlierless) {
   ggsave("results/07_width_outlier_boxplot.png", width_boxplot)
 
   # Create and store boxplot for tornado lengths
-  height_boxplot <- ggplot(test_df, aes(y = length)) +
+  length_boxplot <- ggplot(test_df, aes(y = length)) +
     geom_boxplot() +
     ggtitle("Boxplot of Tornado Lengths") +
     labs(x = "Tornado Length (Miles)", y = "Values")
@@ -126,6 +128,8 @@ main <- function(test_data, outlierless_test, lin_fit, lin_fit_outlierless) {
   
   # Make and store the linear model scores table
   outlierless_lm_test_scores_table <- outlierless_lm_fit |>
+    predict(outlierless_test_df) |>
+    bind_cols(outlierless_test_df) |>
     metrics(truth = fatalities, estimate = .pred)
   
   write_csv(outlierless_lm_test_scores_table, 
