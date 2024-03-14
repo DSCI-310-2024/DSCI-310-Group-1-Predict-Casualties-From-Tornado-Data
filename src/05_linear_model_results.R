@@ -7,16 +7,16 @@ them to create scatterplots used to assess the accuracy of the regression model.
 Additionally, this script creates boxplots from the test data to assess the 
 outliers in the data set.
 
-Usage: 05_linear_model_results.R --test_data=<test_data> --lm_fit=<lm_fit>
+Usage: src/05_linear_model_results.R --test_data=<test_data> --lm_fit=<lm_fit>
 
 Options:
 --test_data=<test_data>   Path to the test data
 --lm_fit=<lm_fit>         Linear regression model data
 " -> doc
 
-library(tidyverse)
-library(tidymodels)
-library(docopt)
+suppressMessages(library(tidyverse))
+suppressMessages(library(tidymodels))
+suppressWarnings(library(docopt))
 
 opt <- docopt(doc)
 
@@ -76,7 +76,7 @@ main <- function(test_data, lm_fit) {
     ggtitle("Figure 6: Fatalities vs Length Plot") +
     theme(text = element_text(size = 15), plot.title = element_text(hjust = 0.5))
   
-  ggsave("results/04_fatalities_vs_length_plot.png", fatal_length_plot)
+  ggsave("results/05_fatalities_vs_length_plot.png", fatal_length_plot)
   
   # Create and store boxplot for tornado widths
   width_boxplot <- ggplot(test_df, aes(y = width)) +
