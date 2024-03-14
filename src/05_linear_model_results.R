@@ -191,4 +191,4 @@ main <- function(test_data, outlierless_test, lin_fit, lin_fit_outlierless) {
   ggsave("results/13_fatalities_vs_length_plot_no_outliers.png", outlierless_length_plot)
 }
 
-main(opt$test_data, opt$outlierless_test, opt$lin_fit, opt$outlierless_lm_fit)
+main(opt$test_data, opt$outlierless_test, opt$lin_fit, opt$lin_fit_outlierless)
