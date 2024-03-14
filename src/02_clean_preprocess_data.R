@@ -12,12 +12,12 @@ Options:
 --seed=<seed>           Set a specified seed, by default will be set at 2000 [default: 2000]
 " -> doc
 
-library(tidyverse)
-library(docopt)
-library(repr)
-library(tidymodels)
-library(psych)
-library(GGally)
+suppressMessages(library(tidyverse))
+suppressWarnings(library(docopt))
+suppressMessages(library(repr))
+suppressMessages(library(tidymodels))
+suppressMessages(library(psych))
+suppressMessages(library(GGally))
 
 opt <- docopt(doc)
 
@@ -36,7 +36,7 @@ main <- function(raw_data, data_to, seed) {
                   'fatalities','start_lat','start_lon','end_lat','end_lon','length','width','ns')
     
     # save processed dataset to specified directory/filepath
-    write_csv(clean_data, file.path(data_to, "tornado_processed.csv"))
+    write_csv(clean_data, file.path(data_to, "01_processed_tornado_data.csv"))
 
     
 
@@ -48,8 +48,8 @@ main <- function(raw_data, data_to, seed) {
     test_df <- testing(data_split)
 
     # save training and testing sets to specified directory/filepath
-    write_csv(train_df, file.path(data_to, "tornado_train.csv"))
-    write_csv(test_df, file.path(data_to, "tornado_test.csv"))
+    write_csv(train_df, file.path(data_to, "02_tornado_train_data.csv"))
+    write_csv(test_df, file.path(data_to, "03_tornado_test_data.csv"))
 }
 
 main(opt$raw_data, opt$data_to, opt$seed)
