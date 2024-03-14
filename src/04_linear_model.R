@@ -2,11 +2,9 @@
 # date: 2024-03-11
 
 "This script reads specified data and creates a linear model, saving it to a RDS file and fitted model results as a CSV.
-Usage: src/04_linear_model.R --train_path=<train_path> --model_path=<model_path> --results_path=<results_path> 
+Usage: src/04_linear_model.R --train_path=<train_path>  
 Options:
 --train_path=<train_path>     Path to the preprocessed training data file
---model_path=<model_path>     Path to where the model will be saved (RDS)
---results_path=<results_path>     Path to where the model results will be saved (CSV)
 " -> doc
 
 suppressMessages(library(tidyverse))
@@ -15,7 +13,7 @@ suppressWarnings(library(docopt))
 
 opt <- docopt(doc)
 
-main <- function(train_path, model_path, results_path) {
+main <- function(train_path) {
 
   # Reading the training data
   train_data <- read_csv(train_path)
@@ -33,12 +31,12 @@ main <- function(train_path, model_path, results_path) {
     add_model(lm_spec) %>%
     fit(data = train_data)
   
-  saveRDS(lm_fit, model_path)
+  saveRDS(lm_fit, "results/01_linear_model.rds")
   
   # Extract and save model results to CSV
   model_results <- tidy(lm_fit)
   
-  write_csv(model_results, results_path)
+  write_csv(model_results, "results/01_training_linear_model_results_scores.csv")
 }
 
-main(opt$train_path, opt$model_path, opt$results_path)
+main(opt$train_path)
