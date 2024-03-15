@@ -2,36 +2,29 @@
 # date: 2024-03-11
 
 "This script reads specified data and creates a linear model, saving it to a RDS file and fitted model results as a CSV.
-
-Usage: 04_splot_model.R --file_path=<file_path> --results_path=<results_path> --model_path=<model_path>
-
+Usage: src/04_linear_model.R --train_path=<train_path> --outlierless_train=<outlierless_train>  
 Options:
---file_path=<file_path>   Path to the data file
---train_path=<train_path>     Path to the preprocessed training data file
---model_path=<model_path>     Path to where the model will be saved (RDS)
---results_path=<results_path>     Path to where the model results will be saved (CSV)
+--train_path=<train_path>                 Path to the preprocessed training data file
+--outlierless_train=<outlierless_train>   Path to the preprocessed outlierless training data file
 " -> doc
 
-library(tidyverse)
-library(tidymodels)
-library(docopt)
+suppressMessages(library(tidyverse))
+suppressMessages(library(tidymodels))
+suppressWarnings(library(docopt))
 
 opt <- docopt(doc)
 
-main <- function(train_path, results_path, model_path, file_path) {
+main <- function(train_path, outlierless_train) {
 
-  # Reading the file data
-  data <- read_data(file_path)
-  
   # Reading the training data
-  train_data <- read_data(train_path)
+  train_data <- read_csv(train_path)
   
   # Create linear model and recipe
   lm_spec <- linear_reg() %>%
     set_engine("lm") %>%
     set_mode("regression")
   
-  lm_recipe <- recipe(fatalities ~ width + length, data = data)
+  lm_recipe <- recipe(fatalities ~ width + length, data = train_data)
   
   # Fit linear model and save to RDS
   lm_fit <- workflow() %>%
@@ -39,12 +32,22 @@ main <- function(train_path, results_path, model_path, file_path) {
     add_model(lm_spec) %>%
     fit(data = train_data)
   
-  saveRDS(lm_fit, model_path)
+  saveRDS(lm_fit, "results/01_linear_model.rds")
+
+  # Reading the outlierless training data
+  train_data_o <- read_csv(outlierless_train)
   
-  # Extract and save model results to CSV
-  model_results <- tidy(lm_fit)
+  # Create linear model and recipe for outlierless data
+  lm_recipe_o <- recipe(fatalities ~ width + length, data = train_data_o)
   
-  write_csv(model_results, results_path)
+  # Fit linear model for outlierless data and save to RDS
+  outlierless_lm_fit <- workflow() %>%
+    add_recipe(lm_recipe) %>%
+    add_model(lm_spec) %>%
+    fit(data = train_data_o)
+
+  saveRDS(outlierless_lm_fit, "results/02_linear_model_outlierless.rds")
   
 }
-main(opt$train_path, opt$results_path, opt$model_path, opt$file_path)
+
+main(opt$train_path, opt$outlierless_train)
