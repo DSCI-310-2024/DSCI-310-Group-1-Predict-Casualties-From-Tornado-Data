@@ -65,6 +65,7 @@ docker compose run --rm analysis-env bash
 ```
 To exit the container and clean up, enter `exit` in the terminal.
 
+
 ## License 
 
 The tornado fatalities predictor report is under the Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0) License. See the license file for more information. The software code contained within this repository is licensed under the MIT license. See the license file for more information. 
