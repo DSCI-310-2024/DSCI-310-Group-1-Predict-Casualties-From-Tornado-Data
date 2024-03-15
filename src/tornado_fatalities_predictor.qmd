@@ -4,8 +4,8 @@ author: "Erika Delorme, Marcela Flaherty, Riddha Tuladhar, Edwin Yeung"
 format:
     html:
         toc: true
-        toc-depth: 2   
-
+        toc-depth: 2 
+        embed-resources: true  
     pdf:
         toc: true
         toc-depth: 2
