@@ -14,30 +14,6 @@ The data set that was used in this project is from the US NOAA's National Weathe
 
 The final report can be found [here](https://github.com/DSCI-310-2024/DSCI-310-Group-1-Predict-Fatalities-From-Tornado-Data/blob/main/src/tornado_fatalities_predictor.ipynb). 
 
-## Usage (outdated; milestone 1)
-Clone this Github repository to your local machine. Whenever you want to run the data analysis, ensure your machine's current working directory is at the root of this repository.
-
-When you run the project for the **first** time, ensure your current working directory is at the root of this repository and enter the following in the terminal:
-``` bash
-conda env create --file environment.yml
-```
-
-Now whenever you want to run the analysis, ensure you are on this newly created environment by running:
-``` bash
-conda activate tornado_fatalities_predictor
-```
-
-Afterwards, open Jupyterlab by running:
-```bash
-jupyter lab
-```
-
-Once you are on Jupyter Lab, navigate to the `src` folder and open the `tornado_predictor.ipynb` file. 
-
-After you open the file, click on `Change Kernel...` under the `Kernel` tab, and select `R [conda env:tornado_fatalities_predictor]`. Restart the kernel and run all cells.
-
-new draft (docker stuff): To shut down the container and clean up the resources, type `Cntrl` + `C` in the terminal where you launched the container, and then type `docker compose rm`. And then type y and enter when it asks you to confirm the container deletion. To work with project in vscode run the following code from the root of this project in a terminal in vscode: `docker compose run --rm analysis-env bash` this is contrary to the instructions in the example project (they don't work) needs further testing to ensure it works as intended
-
 ## Dependencies
 [Docker](https://www.docker.com/) is a container solution used to manage software dependencies for this project. The docker image in this project is based on the `quay.io/jupyter/r-notebook:r-4.3.2` image. Additional dependencies can be found in the [`Dockerfile`](Dockerfile).
 
@@ -71,16 +47,24 @@ Afterwards, look in the terminal for a URL that starts with `http://127.0.0.1:88
 
 **NOTE**: DO NOT close the terminal while in use, otherwise you will lose your current session.
 
-To clean up, first type `Ctrl` + `c` in the terminal. Afterwards, enter `docker compose rm` in the terminal to remove the container. If you closed the terminal by accident, you can also stop and remove the container by going to Docker Desktop and deleting the container of use under the "Containers" tab on the top left.
+To clean up, first type `Ctrl` + `c` in the terminal. Afterwards, enter `docker compose rm` in the terminal to remove the container.
+
+**NOTE**: If you closed the terminal by accident, you can also stop and remove the container by going to Docker Desktop and deleting the container of use under the "Containers" tab on the top left.
 
 2. To work with the project using just the terminal, simply navigate to the root of this project and enter the following:
 
 ```
 docker compose run --rm analysis-env bash
 ```
-To check if the directory/pathways are correct, you can enter `ls` to see the list of files in the current directory. To exit the container, enter `exit` in the terminal.
+To check if the directory/pathways are correct, you can enter `ls` to see the list of files in the current directory. To exit the container and clean up, enter `exit` in the terminal.
 
-3. To work in VSCode, open VSCode and launch a terminal from there. Then enter ...
+3. To work in VSCode, open VSCode and launch a terminal from there. Navigate to the root of this project in the terminal, then enter the same input as above:
+
+```
+docker compose run --rm analysis-env bash
+```
+To exit the container and clean up, enter `exit` in the terminal.
+
 ## License 
 
 The tornado fatalities predictor report is under the Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0) License. See the license file for more information. The software code contained within this repository is licensed under the MIT license. See the license file for more information. 
