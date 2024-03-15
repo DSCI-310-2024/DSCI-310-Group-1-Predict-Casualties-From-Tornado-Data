@@ -4,10 +4,11 @@
 functions that create either a visualization or a table. One main function runs all other 
 functions.
 
-Usage: src/03_eda.R --file_path=<file_path> 
+Usage: src/03_eda.R --file_path=<file_path> --output_path=<output_path> 
 
 Options:
---file_path=<file_path>   Path to the data file
+--file_path=<file_path>         Path to the data file
+--output_path=<output_path>     Path to the output files 
 " -> doc
 
 # import packages and libraries
@@ -22,7 +23,7 @@ suppressWarnings(library(docopt))
 opt <- docopt(doc)
 
 # create summary table 
-create_summary_table <- function(file_path) {
+create_summary_table <- function(file_path, output_path) {
   
     # read in data
     data <- read_csv(file_path)
@@ -32,12 +33,12 @@ create_summary_table <- function(file_path) {
                 'start_lon', 'end_lat', 'end_lon', 'length', 'width', 'ns')], fast = TRUE))
 
     # save table as csv            
-    write_csv(summary_table, "results/eda_01_numeric_features_summary_table.csv")
+    write_csv(summary_table, file.path(output_path,"eda_01_numeric_features_summary_table.csv"))
   
 }
 
 # create correlation plot
-create_correlation_plot <- function(file_path) {
+create_correlation_plot <- function(file_path, output_path) {
   
     # read in data
     data <- read_csv(file_path)
@@ -55,12 +56,12 @@ create_correlation_plot <- function(file_path) {
     theme(plot.title = element_text(size = 14, hjust = 0.5)) 
     
     # save plot as image png
-    ggsave("results/eda_02_correlation_plot.png", correlations_plot)
+    ggsave(file.path(output_path, "eda_02_correlation_plot.png"), correlations_plot)
  
 }
 
 # create scatterplot width vs fatalities
-create_scatterplot_width_fatalities <- function(file_path) {
+create_scatterplot_width_fatalities <- function(file_path, output_path) {
   
     # read in data
     data <- read_csv(file_path)
@@ -76,12 +77,12 @@ create_scatterplot_width_fatalities <- function(file_path) {
     ggtitle("Figure 2: Scatterplot of width (yards) of tornado and fatalities")
     
     # save plot as image png
-    ggsave("results/eda_03_width_vs_fatalities_scatterplot.png", fatalities_width_scatterplot)
+    ggsave(file.path(output_path, "eda_03_width_vs_fatalities_scatterplot.png"), fatalities_width_scatterplot)
  
 }
 
 # create scatterplot length vs fatalities 
-create_scatterplot_length_fatalities <- function(file_path) {
+create_scatterplot_length_fatalities <- function(file_path, output_path) {
   
     # read in data
     data <- read_csv(file_path)
@@ -97,28 +98,28 @@ create_scatterplot_length_fatalities <- function(file_path) {
     ggtitle("Figure 3: Scatterplot of length (miles) of tornado and fatalities")
     
     # save plot as image png
-    ggsave("results/eda_04_length_vs_fatalities_scatterplot.png", fatalities_length_scatterplot)
+    ggsave(file.path(output_path, "eda_04_length_vs_fatalities_scatterplot.png"), fatalities_length_scatterplot)
  
 }
 
 #  define main function 
-main <- function(file_path) {
+main <- function(file_path, output_path) {
   
     # read in data
-    data <- read_csv(file_path)
+    data <- read_csv(file_path, output_path)
     
     # create summary table 
-    create_summary_table(file_path)
+    create_summary_table(file_path, output_path)
     
     # create correlation matrix 
-    create_correlation_plot(file_path)
+    create_correlation_plot(file_path, output_path)
 
     # create width vs fatalities scatterplot 
-    create_scatterplot_width_fatalities(file_path)
+    create_scatterplot_width_fatalities(file_path, output_path)
 
     # create length vs fatalities scatterplot 
-    create_scatterplot_length_fatalities(file_path)
+    create_scatterplot_length_fatalities(file_path, output_path)
   
 }
 
-main(opt$file_path)
+main(opt$file_path, opt$output_path)
