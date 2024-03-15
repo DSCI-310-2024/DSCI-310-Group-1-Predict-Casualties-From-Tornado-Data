@@ -6,4 +6,5 @@ RUN conda install -y --quiet \
     r-irkernel=1.3.2 \ 
     r-psych=2.4.1 \ 
     r-ggally=2.2.1 \
-    r-docopt=0.7.1
+    r-docopt=0.7.1 \
+    r-kableextra=1.4.0
