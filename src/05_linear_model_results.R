@@ -3,13 +3,14 @@ them to create scatterplots used to assess the accuracy of the regression model.
 Additionally, this script creates boxplots from the test data to assess the 
 outliers in the data set.
 
-Usage: src/05_linear_model_results.R --test_data=<test_data> --outlierless_test=<outlierless_test> --lin_fit=<lin_fit> --lin_fit_outlierless=<lin_fit_outlierless> 
+Usage: src/05_linear_model_results.R --test_data=<test_data> --outlierless_test=<outlierless_test> --lin_fit=<lin_fit> --lin_fit_outlierless=<lin_fit_outlierless> --output_path=<output_path>
 
 Options:
 --test_data=<test_data>                       Path to the test data
 --outlierless_test=<outlierless_test>         Path to testing data with no outliers
---lin_fit=<lin_fit>                           Linear regression model object
+--lin_fit=<lin_fit>                           Linear regression model object for complete data 
 --lin_fit_outlierless=<lin_fit_outlierless>   Linear regression model object for outlierless data
+--output_path=<output_path>                   Path to the outputs 
 " -> doc
 
 suppressMessages(library(tidyverse))
@@ -18,7 +19,7 @@ suppressWarnings(library(docopt))
 
 opt <- docopt(doc)
 
-main <- function(test_data, outlierless_test, lin_fit, lin_fit_outlierless) {
+main <- function(test_data, outlierless_test, lin_fit, lin_fit_outlierless, output_path) {
   
   # Read test data
   test_df <- read_csv(test_data)
@@ -33,7 +34,7 @@ main <- function(test_data, outlierless_test, lin_fit, lin_fit_outlierless) {
     metrics(truth = fatalities, estimate = .pred)
   
   write_csv(lm_test_scores_table, 
-            file.path("results/03_linear_model_test_scores_table.csv"))
+            file.path(output_path, "03_linear_model_test_scores_table.csv"))
   
   # Draw linear model onto graphs
   fatal_predictions <- lm_fit |>
@@ -68,7 +69,7 @@ main <- function(test_data, outlierless_test, lin_fit, lin_fit_outlierless) {
     ggtitle("Actual Number of Fatalities vs Predicted Number of Fatalities") +
     theme(text = element_text(size = 14), plot.title = element_text(hjust = 0.5))
   
-  ggsave("results/04_actual_vs_predicted_fatalities_plot.png", fatal_model_viz)
+  ggsave(file.path(output_path, "04_actual_vs_predicted_fatalities_plot.png"), fatal_model_viz)
   
   # Create and store scatter plot for tornado width with linear regression line
   ## Note: Blue line represents predicted values based on our regression model when tornado length = 0
@@ -81,7 +82,7 @@ main <- function(test_data, outlierless_test, lin_fit, lin_fit_outlierless) {
     ggtitle("Fatalities vs Width Plot") +
     theme(text = element_text(size = 15), plot.title = element_text(hjust = 0.5))
   
-  ggsave("results/05_fatalities_vs_width_plot.png", fatal_widths_plot)
+  ggsave(file.path(output_path, "05_fatalities_vs_width_plot.png"), fatal_widths_plot)
   
   # Create and store scatter plot for tornado length with linear regression line
   ## Note: Blue line represents predicted values based on our regression model when tornado width = 0
@@ -94,7 +95,7 @@ main <- function(test_data, outlierless_test, lin_fit, lin_fit_outlierless) {
     ggtitle("Fatalities vs Length Plot") +
     theme(text = element_text(size = 15), plot.title = element_text(hjust = 0.5))
   
-  ggsave("results/06_fatalities_vs_length_plot.png", fatal_length_plot)
+  ggsave(file.path(output_path, "06_fatalities_vs_length_plot.png"), fatal_length_plot)
   
   # Create and store boxplot for tornado widths
   width_boxplot <- ggplot(test_df, aes(y = width)) +
@@ -102,7 +103,7 @@ main <- function(test_data, outlierless_test, lin_fit, lin_fit_outlierless) {
     ggtitle("Boxplot of Tornado Widths") +
     labs(x = "Tornado Width (Yards)", y = "Values")
 
-  ggsave("results/07_width_outlier_boxplot.png", width_boxplot)
+  ggsave(file.path(output_path, "07_width_outlier_boxplot.png"), width_boxplot)
 
   # Create and store boxplot for tornado lengths
   length_boxplot <- ggplot(test_df, aes(y = length)) +
@@ -110,7 +111,7 @@ main <- function(test_data, outlierless_test, lin_fit, lin_fit_outlierless) {
     ggtitle("Boxplot of Tornado Lengths") +
     labs(x = "Tornado Length (Miles)", y = "Values")
   
-  ggsave("results/08_length_outlier_boxplot.png", length_boxplot)
+  ggsave(file.path(output_path, "08_length_outlier_boxplot.png"), length_boxplot)
 
   # Create and store boxplot for tornado fatalities
   fatalities_boxplot <- ggplot(test_df, aes(y = fatalities)) +
@@ -118,7 +119,7 @@ main <- function(test_data, outlierless_test, lin_fit, lin_fit_outlierless) {
     ggtitle("Boxplot of Tornado Fatalities") +
     labs(x = "Number of Fatalities", y = "Values")
   
-  ggsave("results/09_fatalities_outlier_boxplot.png", fatalities_boxplot)
+  ggsave(file.path(output_path, "09_fatalities_outlier_boxplot.png"), fatalities_boxplot)
   
   # Read the outlierless testing data
   outlierless_test_df  <- read.csv(outlierless_test)
@@ -133,7 +134,7 @@ main <- function(test_data, outlierless_test, lin_fit, lin_fit_outlierless) {
     metrics(truth = fatalities, estimate = .pred)
   
   write_csv(outlierless_lm_test_scores_table, 
-            file.path("results/10_linear_model_test_scores_without_outliers_table.csv"))
+            file.path(output_path, "10_linear_model_test_scores_without_outliers_table.csv"))
   
   # Draw linear model onto graphs without outliers
   outlierless_fatal_predictions <- lm_fit |>
@@ -166,7 +167,7 @@ main <- function(test_data, outlierless_test, lin_fit, lin_fit_outlierless) {
     ggtitle("Actual Number of Fatalities vs Predicted Number of Fatalities") +
     theme(text = element_text(size = 14), plot.title = element_text(hjust = 0.5))
   
-  ggsave("results/11_actual_vs_predicted_fatalities_plot_no_outliers.png", outlierless_model_viz)
+  ggsave(file.path(output_path, "11_actual_vs_predicted_fatalities_plot_no_outliers.png"), outlierless_model_viz)
   
   # Create and store scatter plot for tornado width with linear regression line
   ## Note: Blue line represents predicted values based on our regression model when tornado length = 0
@@ -179,7 +180,7 @@ main <- function(test_data, outlierless_test, lin_fit, lin_fit_outlierless) {
     ggtitle("Fatalities vs Width Plot") +
     theme(text = element_text(size = 15), plot.title = element_text(hjust = 0.5))
   
-  ggsave("results/12_fatalities_vs_width_plot_no_outliers.png", outlierless_widths_plot)
+  ggsave(file.path(output_path, "12_fatalities_vs_width_plot_no_outliers.png"), outlierless_widths_plot)
   
   # Create and store scatter plot for tornado length with linear regression line
   ## Note: Blue line represents predicted values based on our regression model when tornado width = 0
@@ -192,7 +193,7 @@ main <- function(test_data, outlierless_test, lin_fit, lin_fit_outlierless) {
     ggtitle("Fatalities vs Length Plot") +
     theme(text = element_text(size = 15), plot.title = element_text(hjust = 0.5))
   
-  ggsave("results/13_fatalities_vs_length_plot_no_outliers.png", outlierless_length_plot)
+  ggsave(file.path(output_path, "13_fatalities_vs_length_plot_no_outliers.png"), outlierless_length_plot)
 }
 
-main(opt$test_data, opt$outlierless_test, opt$lin_fit, opt$lin_fit_outlierless)
+main(opt$test_data, opt$outlierless_test, opt$lin_fit, opt$lin_fit_outlierless, opt$output_path)
