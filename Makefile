@@ -50,8 +50,12 @@ results/03_linear_model_test_scores_table.csv results/04_actual_vs_predicted_fat
 	--output_path=results/
 	
 # render report
-docs: docs/tornado_fatalities_predictor.html \
+docs: docs/tornado_fatalities_predictor.qmd \
+	docs/tornado_fatalities_predictor.html \
 	docs/tornado_fatalities_predictor.pdf 
+
+docs/tornado_fatalities_predictor.qmd: data/processed/01_processed_tornado_data.csv data/processed/02_tornado_train_data.csv data/processed/03_tornado_test_data.csv data/processed/04_tornado_outlierless.csv data/processed/05_tornado_train_outlierless.csv data/processed/06_tornado_test_outlierless.csv: src/02_clean_preprocess_data.R data/raw/raw_tornado_data.csv \
+	results 
 
 docs/tornado_fatalities_predictor.html: docs/tornado_fatalities_predictor.qmd \
 	docs/references.bib \
