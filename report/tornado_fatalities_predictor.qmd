@@ -9,7 +9,7 @@ format:
     pdf:
         toc: true
         toc-depth: 2
-        fig-pos: "H"
+        fig-pos: 'h'
 execute:
   echo: false
 editor: source
@@ -42,7 +42,6 @@ suppressPackageStartupMessages(library(tidyverse))
 suppressPackageStartupMessages(library(tidymodels))
 suppressPackageStartupMessages(library(psych))
 suppressPackageStartupMessages(library(GGally))
-suppressPackageStartupMessages(library(kableExtra))
 ```
 
 2.Then, we read in the data about tornadoes directly from the website. 
@@ -53,7 +52,7 @@ URL <- "https://raw.githubusercontent.com/rfordatascience/tidytuesday/a9e277dd77
 tornado_data <- read.csv(URL)
 
 knitr::kable(head(tornado_data))%>%
-  kable_styling(bootstrap_options = c("striped", "hover", "condensed"))
+  kableExtra::kable_styling(full_width = FALSE, bootstrap_options = c("striped", "hover", "condensed"))
                 
 ```
 
@@ -61,12 +60,10 @@ knitr::kable(head(tornado_data))%>%
 
 ```{r}
 knitr::kable(sapply(tornado_data, function(x) sum(is.na(x))))%>%
-  kable_styling(bootstrap_options = c("striped", "hover", "condensed"))
+  kableExtra::kable_styling(bootstrap_options = c("striped", "hover", "condensed"))
 ```
 
-  We can see that there are no missing values, except for the feature `loss`, with 27,170 missing values and 756 missing values for the feature mag.  The feature `loss` refers to the financial loss of each tornado. For our regression problem, we did not deem this feature to be an important feature. Therefore, we decide to remove this column. 
-
-  Because there are not so many rows missing for the feature `mag`, we decide to filter those rows out. 
+  We can see that there are no missing values, except for the feature `loss`, with 27,170 missing values and 756 missing values for the feature mag.  The feature `loss` refers to the financial loss of each tornado. For our regression problem, we did not deem this feature to be an important feature. Therefore, we decide to remove this column. Because there are not so many rows missing for the feature `mag`, we decide to filter those rows out. 
 
 4.Then, we remove irrelevant or repetitive columns and then filter for missing values of the column `mag`, which stands for magnitude. Then, we change the feature names to make them more descriptive. We show the top 6 rows of our cleaned data. 
 
@@ -83,7 +80,7 @@ names(df) <- c('ID','year','month','day','time','datetime_utc','state','mag','in
                'fatalities','start_lat','start_lon','end_lat','end_lon','length','width','ns')
 
 knitr::kable(head(df))%>%
-  kable_styling(bootstrap_options = c("striped", "hover", "condensed"))
+  kableExtra::kable_styling(full_width = FALSE, bootstrap_options = c("striped", "hover", "condensed"))
 ```
 
 ```{r}
@@ -125,8 +122,8 @@ describe(train_df[, c('mag', 'injuries', 'fatalities', 'start_lat', 'start_lon',
 ```{r}
 #| label: fig-correlation-matrix
 #| fig-cap: "Correlation matrix of important numeral features and target."
-#| fig-pos: t
-#| out-width: 80%
+#| fig-pos: 'h'
+#| out-width: 55%
 
 correlations_plot <- train_df %>%
     ggpairs(
@@ -148,8 +145,8 @@ correlations_plot
 ```{r}
 #| label: fig-width
 #| fig-cap: "Scatterplot of width (yards) of tornado and fatalities."
-#| fig-pos: t
-#| out-width: 80%
+#| fig-pos: 'h'
+#| out-width: 40%
 
 fatalities_width_scatterplot = ggplot(train_df, aes(x = width, y = fatalities)) +
     geom_point(alpha = 0.4) +
@@ -163,8 +160,8 @@ fatalities_width_scatterplot
 ```{r}
 #| label: fig-length
 #| fig-cap: "Scatterplot of length (miles) of tornado and fatalities."
-#| fig-pos: t
-#| out-width: 80%
+#| fig-pos: 'h'
+#| out-width: 40%
 
 fatalities_length_scatterplot = ggplot(train_df, aes(x = length, y = fatalities)) +
     geom_point(alpha = 0.4) +
@@ -183,7 +180,11 @@ fatalities_length_scatterplot
 
   Now that we have our training data `train_df`, we can fit our linear regression model. We will first specify our model, and then proceed to fit our model and obtain the regression coefficients.
    
-```{r}   
+```{r} 
+#| label: tbl-lm-fit1
+#| tbl-cap: "Fit Model."
+#| warning: false
+ 
 # specify prediction model
 lm_spec <- linear_reg() |>
   set_engine("lm") |>
@@ -198,11 +199,10 @@ lm_fit <- workflow() |>
   add_model(lm_spec) |>
   fit(data = train_df)
 
-lm_fit
+knitr::kable(tidy(lm_fit))
 ```
 
 9.Now that we have our model, we can predict on the testing data `test_df` to assess how well it does.
-
 ```{r}
 #| label: tbl-outliers
 #| tbl-cap: "Results from model with outliers."
@@ -215,7 +215,6 @@ lm_test_results <- lm_fit |>
 
 knitr::kable(lm_test_results)
 ```
-
 10.We can visualize our linear regression model to get a better idea of how well it performs.
 
 ```{r}
@@ -234,8 +233,8 @@ fatal_predictions <- lm_fit |>
 ```{r}
 #| label: fig-model_viz
 #| fig-cap: "Actual Number of Fatalities vs Predicted Number of Fatalities."
-#| fig-pos: t
-#| out-width: 80%
+#| fig-pos: 'h'
+#| out-width: 40%
 #| warning: false
 
 ## Note: Red line represents where points would be plotted if the model was 100% accurate
@@ -257,8 +256,8 @@ fatal_model_viz
 ```{r}
 #| label:  fig-widths_plot
 #| fig-cap: "Fatalities vs Width Plot."
-#| fig-pos: t
-#| out-width: 80%
+#| fig-pos: 'h'
+#| out-width: 40%
 #| warning: false
 
 ## Note: Blue line represents predicted values based on our regression model when tornado length = 0
@@ -268,7 +267,7 @@ fatal_widths_plot <- ggplot(test_df, aes(x = width, y = fatalities)) +
      #       mapping = aes(x = width, y = .pred),
      #       color = "steelblue",
      #       linewidth = 1) +
-     geom_abline(intercept = -0.1183680, slope = 0.0007337, color = "steelblue", linewidth = 2) +
+     geom_abline(intercept = -0.1183670, slope = 0.0007337, color = "steelblue", linewidth = 2) +
      scale_y_continuous(trans = "log10") + 
      xlab("Tornado Width (Yards)") +
      ylab("Fatalities") +
@@ -280,8 +279,8 @@ fatal_widths_plot
 ```{r}
 #| label: fig-length_plot
 #| fig-cap: "Fatalities vs Length Plot."
-#| fig-pos: t
-#| out-width: 80%
+#| fig-pos: 'h'
+#| out-width: 40%
 #| warning: false
 
 ## Note: Blue line represents predicted values based on our regression model when tornado width = 0
@@ -291,7 +290,7 @@ fatal_length_plot <- ggplot(test_df, aes(x = length, y = fatalities)) +
      #       mapping = aes(x = length, y = .pred),
      #       color = "steelblue",
      #       linewidth = 1) +
-     geom_abline(intercept = -0.1183680, slope = 0.0367960, color = "steelblue", linewidth = 2) +
+     geom_abline(intercept = -0.1183670, slope = 0.0367960, color = "steelblue", linewidth = 2) +
      scale_y_continuous(trans = "log10") + 
      xlab("Tornado Length (Miles)") +
      ylab("Fatalities") +
@@ -300,17 +299,49 @@ fatal_length_plot <- ggplot(test_df, aes(x = length, y = fatalities)) +
 fatal_length_plot
 ```
 
-  Note there are clear outliers in the data, thus we will perform the same analysis after removing the outliers.
+
+Note there are clear outliers in the data, thus we will perform the same analysis after removing the outliers.
+
+Note that, as the majority of tornadoes cause no fatalities and thus removing these outliers will leave us with data only containing tornadoes that caused no death, we will not be filtering outliers for fatalities.
 
 ```{r}
-# Checking for outliers
+#| label: fig-box1
+#| fig-cap: "Boxplot of Tornado Widths."
+#| fig-pos: 'h'
+#| out-width: 35%
+#| warning: false
 
-boxplot(df$width, main = "Boxplot of Tornado Widths", ylab = "Values", xlab = "Tornado Width (Yards)")
-boxplot(df$length, main = "Boxplot of Tornado Lengths", ylab = "Values", xlab = "Tornado Length (Miles)")
-boxplot(df$fatalities, main = "Boxplot of Tornado Fatalities", ylab = "Values", xlab = "Number of Fatalities")
+# Checking for outliers
+boxplot(df$width, ylab = "Values", xlab = "Tornado Width (Yards)")
+
+
 ```
 
-  Note that, as the majority of tornadoes cause no fatalities and thus removing these outliers will leave us with data only containing tornadoes that caused no death, we will not be filtering outliers for fatalities.
+```{r}
+#| label: fig-box2
+#| fig-cap: "Boxplot of Tornado Widths."
+#| fig-pos: 'h'
+#| out-width: 35%
+#| warning: false
+
+# Checking for outliers
+boxplot(df$length, ylab = "Values", xlab = "Tornado Length (Miles)")
+
+```
+
+```{r}
+#| label: fig-box3
+#| fig-cap: "Boxplot of Tornado Widths."
+#| fig-pos: 'h'
+#| out-width: 35%
+#| warning: false
+## Checking for outliers
+
+boxplot(df$fatalities, ylab = "Values", xlab = "Number of Fatalities")
+
+```
+$$\\$$
+
 
 ```{r}
 # Removing outliers from data frame
@@ -334,6 +365,10 @@ outlierless_df <- df |>
 ```
 
 ```{r}
+#| label: tbl-lm-fit2
+#| tbl-cap: "Fit Model."
+#| warning: false
+
 # Creating new model with the new data frame without outliers
 
 set.seed(2000)
@@ -355,7 +390,7 @@ new_lm_fit <- workflow() |>
   add_model(new_lm_spec) |>
   fit(data = new_train_df)
 
-new_lm_fit
+knitr::kable(tidy(new_lm_fit))
 ```
 
 ```{r}
@@ -387,8 +422,8 @@ new_fatal_predictions <- new_lm_fit |>
 ```{r}
 #| label: fig-new_fatal_model_viz
 #| fig-cap: "Actual Number of Fatalities vs Predicted Number of Fatalities."
-#| fig-pos: t
-#| out-width: 80%
+#| fig-pos: 'h'
+#| out-width: 40%
 #| warning: false
 
 ## Note: Red line represents where points would be plotted if the model was 100% accurate
@@ -407,11 +442,14 @@ new_fatal_model_viz <- ggplot(new_fatal_predictions, aes(x = fatalities, y = .pr
 new_fatal_model_viz
 ```
 
+
+\newpage
+
 ```{r}
 #| label: fig-new_fatal_widths_plot
 #| fig-cap: "Fatalities vs Width Plot."
-#| fig-pos: t
-#| out-width: 80%
+#| fig-pos: 'h'
+#| out-width: 40%
 #| warning: false
 
 ## Note: Blue line represents predicted values based on our regression model when tornado length = 0
@@ -433,8 +471,8 @@ new_fatal_widths_plot
 ```{r}
 #| label: fig-new_fatal_length_plot
 #| fig-cap: "Fatalities vs Length Plot."
-#| fig-pos: t
-#| out-width: 80%
+#| fig-pos: 'h'
+#| out-width: 40%
 #| warning: false
 
 ## Note: Blue line represents predicted values based on our regression model when tornado width = 0
@@ -453,15 +491,18 @@ new_fatal_length_plot <- ggplot(new_test_df, aes(x = length, y = fatalities)) +
 new_fatal_length_plot
 ```
 
-# Discussion and Results
 
+
+
+
+# Discussion and Results
 Our initial exploration of features width and length demonstrated a positive correlation with our target, fatalities. Length and fatalities show a correlation of `0.237`, whereas width and fatalities show a correlation of `0.174`. The values are small but illustrate a stronger positive relationship between length and fatalities.
 
 Before constructing our model, we performed a 75/25 split on our data for reproducibility and validity.
 
 From our multivariable linear regression model with the inclusion of outliers, we can write an equation of best fit: 
 $$
-\text{Tornado fatalities} = 0.0367960 \times (\text{length of tornado}) + 0.0007337 \times (\text{width of tornado}) - 0.1183680
+\text{Tornado fatalities} = 0.0367960 \times (\text{length of tornado}) + 0.0007337 \times (\text{width of tornado}) - 0.1183670
 $$
 The coefficients and intercept of the equation are positive but small demonstrating that our features `length` and `width` may not have a large impact on predicting tornado fatalities. This signifies that the features may not be leading to precise predictions. Our results follow our initial exploration of the data, where we saw small positive correlations.
 
