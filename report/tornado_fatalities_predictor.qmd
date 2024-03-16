@@ -302,9 +302,7 @@ fatal_length_plot
 
 Note there are clear outliers in the data, thus we will perform the same analysis after removing the outliers.
 
-$$\ \\$$
-$$\ \\$$
-
+Note that, as the majority of tornadoes cause no fatalities and thus removing these outliers will leave us with data only containing tornadoes that caused no death, we will not be filtering outliers for fatalities.
 
 ```{r}
 #| label: fig-box1
@@ -315,6 +313,7 @@ $$\ \\$$
 
 # Checking for outliers
 boxplot(df$width, ylab = "Values", xlab = "Tornado Width (Yards)")
+
 
 ```
 
@@ -341,9 +340,8 @@ boxplot(df$length, ylab = "Values", xlab = "Tornado Length (Miles)")
 boxplot(df$fatalities, ylab = "Values", xlab = "Number of Fatalities")
 
 ```
+$$\\$$
 
-  Note that, as the majority of tornadoes cause no fatalities and thus removing these outliers will leave us with data only containing tornadoes that caused no death, we will not be filtering outliers for fatalities.
-$$\ \\$$
 
 ```{r}
 # Removing outliers from data frame
@@ -444,6 +442,9 @@ new_fatal_model_viz <- ggplot(new_fatal_predictions, aes(x = fatalities, y = .pr
 new_fatal_model_viz
 ```
 
+
+\newpage
+
 ```{r}
 #| label: fig-new_fatal_widths_plot
 #| fig-cap: "Fatalities vs Width Plot."
@@ -490,8 +491,11 @@ new_fatal_length_plot <- ggplot(new_test_df, aes(x = length, y = fatalities)) +
 new_fatal_length_plot
 ```
 
-# Discussion and Results
 
+
+
+
+# Discussion and Results
 Our initial exploration of features width and length demonstrated a positive correlation with our target, fatalities. Length and fatalities show a correlation of `0.237`, whereas width and fatalities show a correlation of `0.174`. The values are small but illustrate a stronger positive relationship between length and fatalities.
 
 Before constructing our model, we performed a 75/25 split on our data for reproducibility and validity.
