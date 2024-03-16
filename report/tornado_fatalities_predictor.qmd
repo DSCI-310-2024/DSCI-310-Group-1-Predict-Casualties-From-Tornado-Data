@@ -47,6 +47,7 @@ suppressPackageStartupMessages(library(GGally))
 2.Then, we read in the data about tornadoes directly from the website. 
 
 ```{r}
+#| tbl-cap: "Raw tornado data"
 # Load data
 URL <- "https://raw.githubusercontent.com/rfordatascience/tidytuesday/a9e277dd77331e9091e151bb5adb584742064b3e/data/2023/2023-05-16/tornados.csv"
 tornado_data <- read.csv(URL)
@@ -59,6 +60,7 @@ knitr::kable(head(tornado_data))%>%
 3.Next, we wrangle and clean the data. Firstly, we check for missing values in our cleaned data.
 
 ```{r}
+#| tbl-cap: "Count of missing values"
 knitr::kable(sapply(tornado_data, function(x) sum(is.na(x))))%>%
   kableExtra::kable_styling(bootstrap_options = c("striped", "hover", "condensed"))
 ```
@@ -68,6 +70,7 @@ knitr::kable(sapply(tornado_data, function(x) sum(is.na(x))))%>%
 4.Then, we remove irrelevant or repetitive columns and then filter for missing values of the column `mag`, which stands for magnitude. Then, we change the feature names to make them more descriptive. We show the top 6 rows of our cleaned data. 
 
 ```{r}
+#| tbl-cap: "Cleaned tornado data"
 # Wrangle and clean data
 
 # Remove irrelevant or repetitive columns, and filter for NA in magnitude
