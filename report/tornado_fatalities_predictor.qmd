@@ -316,7 +316,6 @@ $$\ \\$$
 # Checking for outliers
 boxplot(df$width, ylab = "Values", xlab = "Tornado Width (Yards)")
 
-
 ```
 
 ```{r}
