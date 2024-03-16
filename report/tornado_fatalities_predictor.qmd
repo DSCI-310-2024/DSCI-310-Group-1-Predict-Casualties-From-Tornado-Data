@@ -1,0 +1,493 @@
+---
+title: "Predicting Fatalities from Tornado Data (Group 1)"
+author: "Erika Delorme, Marcela Flaherty, Riddha Tuladhar, Edwin Yeung"
+format:
+    html:
+        toc: true
+        toc-depth: 2 
+        embed-resources: true  
+    pdf:
+        toc: true
+        toc-depth: 2
+        fig-pos: "H"
+execute:
+  echo: false
+editor: source
+bibliography: references.bib
+---
+
+# Summary
+
+In our project, we attempt to build a multilinear regression model that will predict the number of fatalities from tornadoes using the features width (yards) and length (miles) of the tornado. We tested our multilinear regression model with and without outliers and compared differences in coefficients and RMSPE scores. Both models had low positive coefficients, suggesting a minimal yet positive impact on the prediction of tornado fatalities, and both had low RMSPE scores, suggesting a low amount of error in its predictions. The model without outliers had a lower RMSPE score, which is partly explained by the lack of outliers and thus making predictions on a smaller range, which reduces the error. Despite the limitations of our model, we believe that it can still have some utility in predicting tornado fatalities with little error. However, the model should be improved in the future before being deployed to improve the size of the coefficients and its predictive power. In the future, we may consider exploring other features in predicting fatalities, predicting the number of injuries from the same features, or even predicting the number of casualties (injuries and fatalities) from the same and additional features. 
+
+# Introduction
+
+Tornadoes are a common type of natural disaster in the United States; in fact, the United States gets more tornadoes than any other country at over 1,150 thousand recorded every year [@Chinchar2022]. Furthermore, the United States has experienced many of the most violent tornadoes, with 59 of the 67 most violent tornadoes in recorded history taking place in the country [@StormPrediction]. As such, the ability to predict the number of fatalities caused by these tornadoes based on their physical characteristics is desirable in order to employ preventative measures and reduce the number of casualties caused by these disasters.
+
+This project will be using a data set from the US NOAA’s Storm Prediction Cente [@StormPrediction], which contains information on all tornadoes recorded in the United States from 1950 to 2022. For each tornado, the data set records many of its features, including but not limited to its length, width, the state in the US, the date and time it occurred, the number of fatalities and the number of injuries it caused, and the financial losses it incurred. Using this information, this project will use a multivariable linear regression to answer the question “How does the length and width of a tornado affect the number of fatalities it causes?”
+
+# Methods
+
+## Data wrangling and cleaning
+
+The R programming language [@R]  and the following R packages were used to conduct our analysis: repr [@repr], tidyverse [@Wickham2017], tidymodels [@Kuhn2023], psych [@Revelle2019], and GGally [@Schloerke2020].
+
+The code used to perform the analysis and create this report can be found here: [https://github.com/DSCI-310-2024/DSCI-310-Group-1-Predict-Fatalities-From-Tornado-Data/blob/main/src/tornado_fatalities_predictor.ipynb](https://github.com/DSCI-310-2024/DSCI-310-Group-1-Predict-Fatalities-From-Tornado-Data/blob/main/src/tornado_fatalities_predictor.ipynb). 
+
+1.First, we load the necessary packages. 
+
+```{r}
+suppressPackageStartupMessages(library(repr))
+suppressPackageStartupMessages(library(tidyverse))
+suppressPackageStartupMessages(library(tidymodels))
+suppressPackageStartupMessages(library(psych))
+suppressPackageStartupMessages(library(GGally))
+suppressPackageStartupMessages(library(kableExtra))
+```
+
+2.Then, we read in the data about tornadoes directly from the website. 
+
+```{r}
+# Load data
+URL <- "https://raw.githubusercontent.com/rfordatascience/tidytuesday/a9e277dd77331e9091e151bb5adb584742064b3e/data/2023/2023-05-16/tornados.csv"
+tornado_data <- read.csv(URL)
+
+knitr::kable(head(tornado_data))%>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"))
+                
+```
+
+3.Next, we wrangle and clean the data. Firstly, we check for missing values in our cleaned data.
+
+```{r}
+knitr::kable(sapply(tornado_data, function(x) sum(is.na(x))))%>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"))
+```
+
+  We can see that there are no missing values, except for the feature `loss`, with 27,170 missing values and 756 missing values for the feature mag.  The feature `loss` refers to the financial loss of each tornado. For our regression problem, we did not deem this feature to be an important feature. Therefore, we decide to remove this column. 
+
+  Because there are not so many rows missing for the feature `mag`, we decide to filter those rows out. 
+
+4.Then, we remove irrelevant or repetitive columns and then filter for missing values of the column `mag`, which stands for magnitude. Then, we change the feature names to make them more descriptive. We show the top 6 rows of our cleaned data. 
+
+```{r}
+# Wrangle and clean data
+
+# Remove irrelevant or repetitive columns, and filter for NA in magnitude
+df <- tornado_data %>%
+    select(-date, -tz, -stf, -sn, -f1, -f2, -f3, -f4, -fc, -loss) %>%
+    filter(!is.na(mag)) 
+
+# Change feature names to be more descriptive
+names(df) <- c('ID','year','month','day','time','datetime_utc','state','mag','injuries',
+               'fatalities','start_lat','start_lon','end_lat','end_lon','length','width','ns')
+
+knitr::kable(head(df))%>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"))
+```
+
+```{r}
+# This is to export cleaned data frame to new csv file
+#write_csv(df, "C:\\Users\\Erika\\DSCI-310-Group-1-Predict-Fatalities-From-Tornado-Data\\data\\processed\\01_clean_tornado_data.csv")
+```
+
+5.We split our data into two sets: `train_df` and `test_df`. `train_df` consists of 75% of our original data set and is used to train our regression model. The remaining 25% of our original data is `test_df`, which we use later to test the accuracy of our model at prediction. 
+
+```{r}
+set.seed(2000)
+
+data_split <- initial_split(df, prop = 0.75, strata = fatalities)
+train_df <- training(data_split)
+test_df <- testing(data_split)
+```
+
+```{r}
+#write_csv(train_df, "C:\\Users\\Erika\\DSCI-310-Group-1-Predict-Fatalities-From-Tornado-Data\\data\\processed\\02_tornado_train_data.csv")
+#write_csv(test_df, "C:\\Users\\Erika\\DSCI-310-Group-1-Predict-Fatalities-From-Tornado-Data\\data\\processed\\03_tornado_test_data.csv")
+```
+
+## EDA: Descriptive statistics and visualizations
+
+6.Next, we create a summary table of features that could be useful to use in our regression model. 
+
+```{r}
+#| label: tbl-num-feat
+#| tbl-cap: "Summary table of numerical features."
+
+describe(train_df[, c('mag', 'injuries', 'fatalities', 'start_lat', 'start_lon', 'end_lat', 'end_lon', 
+                'length', 'width', 'ns')], fast = TRUE) %>%
+  knitr::kable()
+```
+
+
+7.We create a correlation matrix to view the correlations between features related to `injuries` and `fatalities`. 
+
+```{r}
+#| label: fig-correlation-matrix
+#| fig-cap: "Correlation matrix of important numeral features and target."
+#| fig-pos: t
+#| out-width: 80%
+
+correlations_plot <- train_df %>%
+    ggpairs(
+        columns = c("mag", "fatalities", "length", "width"), 
+        lower = list(
+            continuous = "smooth", 
+            combo = wrap("facethist", binwidth = 2)))+
+    theme(plot.title = element_blank())
+    
+correlations_plot
+```
+
+  From the correlation matrix, we observe that there are some small sized correlations between `fatalities` and other continuous features. For example, there is a correlation of `0.231` between `length` and `fatalities` and a correlation of `0.170` between `width` and `fatalities`.
+
+  There are also correlations between features that are not the target. For example, there is medium sized correlation of `0.439` between `length` and `mag` and a correlation of `0.417` between `width` and `mag`.
+
+  These small to medium correlations may suggest that these features could be useful in predicting fatalities.
+
+```{r}
+#| label: fig-width
+#| fig-cap: "Scatterplot of width (yards) of tornado and fatalities."
+#| fig-pos: t
+#| out-width: 80%
+
+fatalities_width_scatterplot = ggplot(train_df, aes(x = width, y = fatalities)) +
+    geom_point(alpha = 0.4) +
+    xlab("Width (yards) of tornados") +
+    ylab("Fatalities") +
+    theme(text = element_text(size = 14), plot.title = element_blank()) 
+
+fatalities_width_scatterplot
+```
+
+```{r}
+#| label: fig-length
+#| fig-cap: "Scatterplot of length (miles) of tornado and fatalities."
+#| fig-pos: t
+#| out-width: 80%
+
+fatalities_length_scatterplot = ggplot(train_df, aes(x = length, y = fatalities)) +
+    geom_point(alpha = 0.4) +
+    xlab("Length (miles) of tornados") +
+    ylab("Fatalities") +
+    theme(text = element_text(size = 14), plot.title = element_blank()) 
+
+fatalities_length_scatterplot
+```
+
+  Based on the correlation matrix, we decide to use `length` and `width` as features in our model as they are numerical unlike `mag`. 
+
+## Model selection and analysis
+
+8.As mentioned previously, our group has decided that we will use a linear regression model to predict tornado casualties. We will be using the variables `width` and `length` as our predictors. The former is a measure of the width of a tornado, while the latter is a measure of length. The units of measurements are yards and miles, respectively.
+
+  Now that we have our training data `train_df`, we can fit our linear regression model. We will first specify our model, and then proceed to fit our model and obtain the regression coefficients.
+   
+```{r}   
+# specify prediction model
+lm_spec <- linear_reg() |>
+  set_engine("lm") |>
+  set_mode("regression")
+
+# specify recipe
+lm_recipe <- recipe(fatalities ~ length + width, data = df)
+
+# fit the model based on the recipe, specification and training data
+lm_fit <- workflow() |>
+  add_recipe(lm_recipe) |>
+  add_model(lm_spec) |>
+  fit(data = train_df)
+
+lm_fit
+```
+
+9.Now that we have our model, we can predict on the testing data `test_df` to assess how well it does.
+
+```{r}
+#| label: tbl-outliers
+#| tbl-cap: "Results from model with outliers."
+#| warning: false
+
+lm_test_results <- lm_fit |>
+  predict(test_df) |>
+  bind_cols(test_df) |>
+  metrics(truth = fatalities, estimate = .pred)
+
+knitr::kable(lm_test_results)
+```
+
+10.We can visualize our linear regression model to get a better idea of how well it performs.
+
+```{r}
+
+# Creating plots showing accuracy of linear regression model
+fatal_rsmpe <- lm_test_results |>
+    filter(.metric == "rmse") |>
+    select(.estimate) |>
+    pull()
+
+fatal_predictions <- lm_fit |>
+    predict(test_df) |>
+    bind_cols(test_df)
+```
+
+```{r}
+#| label: fig-model_viz
+#| fig-cap: "Actual Number of Fatalities vs Predicted Number of Fatalities."
+#| fig-pos: t
+#| out-width: 80%
+#| warning: false
+
+## Note: Red line represents where points would be plotted if the model was 100% accurate
+fatal_model_viz <- ggplot(fatal_predictions, aes(x = fatalities, y = .pred)) +
+    geom_point(alpha = 0.6) +
+    # geom_line(data = fatal_predictions,
+    #        mapping = aes(x = fatalities, y = .pred),
+    #        color = "steelblue",
+    #        linewidth = 1) +
+    geom_abline(intercept = 0, slope = 1, color = "red", linetype = "dashed", linewidth = 2)+
+    scale_x_continuous(trans = "log10") + 
+    xlab("Actual Number of Fatalities") +
+    ylab("Predicted Number of Fatalities")+
+    theme(text = element_text(size = 14), plot.title = element_blank())
+
+fatal_model_viz
+```
+
+```{r}
+#| label:  fig-widths_plot
+#| fig-cap: "Fatalities vs Width Plot."
+#| fig-pos: t
+#| out-width: 80%
+#| warning: false
+
+## Note: Blue line represents predicted values based on our regression model when tornado length = 0
+fatal_widths_plot <- ggplot(test_df, aes(x = width, y = fatalities)) +
+     geom_point(alpha = 0.4) +
+     # geom_line(data = fatal_predictions,
+     #       mapping = aes(x = width, y = .pred),
+     #       color = "steelblue",
+     #       linewidth = 1) +
+     geom_abline(intercept = -0.1183680, slope = 0.0007337, color = "steelblue", linewidth = 2) +
+     scale_y_continuous(trans = "log10") + 
+     xlab("Tornado Width (Yards)") +
+     ylab("Fatalities") +
+     theme(text = element_text(size = 15), plot.title = element_blank())
+
+fatal_widths_plot
+```
+
+```{r}
+#| label: fig-length_plot
+#| fig-cap: "Fatalities vs Length Plot."
+#| fig-pos: t
+#| out-width: 80%
+#| warning: false
+
+## Note: Blue line represents predicted values based on our regression model when tornado width = 0
+fatal_length_plot <- ggplot(test_df, aes(x = length, y = fatalities)) +
+     geom_point(alpha = 0.4) +
+     # geom_line(data = fatal_predictions,
+     #       mapping = aes(x = length, y = .pred),
+     #       color = "steelblue",
+     #       linewidth = 1) +
+     geom_abline(intercept = -0.1183680, slope = 0.0367960, color = "steelblue", linewidth = 2) +
+     scale_y_continuous(trans = "log10") + 
+     xlab("Tornado Length (Miles)") +
+     ylab("Fatalities") +
+     theme(text = element_text(size = 15), plot.title = element_blank())
+
+fatal_length_plot
+```
+
+  Note there are clear outliers in the data, thus we will perform the same analysis after removing the outliers.
+
+```{r}
+# Checking for outliers
+
+boxplot(df$width, main = "Boxplot of Tornado Widths", ylab = "Values", xlab = "Tornado Width (Yards)")
+boxplot(df$length, main = "Boxplot of Tornado Lengths", ylab = "Values", xlab = "Tornado Length (Miles)")
+boxplot(df$fatalities, main = "Boxplot of Tornado Fatalities", ylab = "Values", xlab = "Number of Fatalities")
+```
+
+  Note that, as the majority of tornadoes cause no fatalities and thus removing these outliers will leave us with data only containing tornadoes that caused no death, we will not be filtering outliers for fatalities.
+
+```{r}
+# Removing outliers from data frame
+width_upper_fence <- unname(quantile(df$width, 0.75)) + (1.5 * IQR(df$width))
+width_lower_fence <- unname(quantile(df$width, 0.25)) - (1.5 * IQR(df$width))
+
+length_upper_fence <- unname(quantile(df$length, 0.75)) + (1.5 * IQR(df$length))
+length_lower_fence <- unname(quantile(df$length, 0.25)) - (1.5 * IQR(df$length))
+
+outlierless_df <- df |>
+    filter(width <= width_upper_fence) |>
+    filter(width >= width_lower_fence) |>
+    filter(length <= length_upper_fence) |>
+    filter(length >= length_lower_fence)
+```
+
+```{r}
+# ## Creating box plots to confirm outliers have been removed
+# boxplot(outlierless_df$width, main = "Boxplot of Tornado Widths", ylab = "Values", xlab = "Tornado Width (Yards)")
+# boxplot(outlierless_df$length, main = "Boxplot of Tornado Lengths", ylab = "Values", xlab = "Tornado Length (Miles)")
+```
+
+```{r}
+# Creating new model with the new data frame without outliers
+
+set.seed(2000)
+
+new_data_split <- initial_split(outlierless_df, prop = 0.75, strata = fatalities)
+new_train_df <- training(new_data_split)
+new_test_df <- testing(new_data_split)
+
+new_lm_spec <- linear_reg() |>
+  set_engine("lm") |>
+  set_mode("regression")
+
+# specify recipe
+new_lm_recipe <- recipe(fatalities ~ length + width, data = outlierless_df)
+
+# fit the model based on the recipe, specification and training data
+new_lm_fit <- workflow() |>
+  add_recipe(new_lm_recipe) |>
+  add_model(new_lm_spec) |>
+  fit(data = new_train_df)
+
+new_lm_fit
+```
+
+```{r}
+#| label: tbl-outliers2
+#| tbl-cap: "Results from model without outliers."
+
+# Use new_lm_fit to predict on new_test_df and output RMSPE to assess model's test error
+new_lm_test_results <- new_lm_fit |>
+  predict(new_test_df) |>
+  bind_cols(new_test_df) |>
+  metrics(truth = fatalities, estimate = .pred)
+
+knitr::kable(new_lm_test_results)
+```
+
+
+```{r}
+# Creating plots showing accuracy of new linear regression model
+new_fatal_rsmpe <- new_lm_test_results |>
+    filter(.metric == "rmse") |>
+    select(.estimate) |>
+    pull()
+
+new_fatal_predictions <- new_lm_fit |>
+    predict(new_test_df) |>
+    bind_cols(new_test_df)
+```
+
+```{r}
+#| label: fig-new_fatal_model_viz
+#| fig-cap: "Actual Number of Fatalities vs Predicted Number of Fatalities."
+#| fig-pos: t
+#| out-width: 80%
+#| warning: false
+
+## Note: Red line represents where points would be plotted if the model was 100% accurate
+new_fatal_model_viz <- ggplot(new_fatal_predictions, aes(x = fatalities, y = .pred)) +
+    geom_point(alpha = 0.6) +
+    # geom_line(data = fatal_predictions,
+    #        mapping = aes(x = fatalities, y = .pred),
+    #        color = "steelblue",
+    #        linewidth = 1) +
+    geom_abline(intercept = 0, slope = 1, color = "red", linetype = "dashed", linewidth = 2)+
+    scale_x_continuous(trans = "log10") + 
+    xlab("Actual Number of Fatalities") +
+    ylab("Predicted Number of Fatalities") +
+    theme(text = element_text(size = 15), plot.title = element_blank())
+
+new_fatal_model_viz
+```
+
+```{r}
+#| label: fig-new_fatal_widths_plot
+#| fig-cap: "Fatalities vs Width Plot."
+#| fig-pos: t
+#| out-width: 80%
+#| warning: false
+
+## Note: Blue line represents predicted values based on our regression model when tornado length = 0
+new_fatal_widths_plot <- ggplot(new_test_df, aes(x = width, y = fatalities)) +
+     geom_point(alpha = 0.4) +
+     # geom_line(data = fatal_predictions,
+     #       mapping = aes(x = width, y = .pred),
+     #       color = "steelblue",
+     #       linewidth = 1) +
+     geom_abline(intercept = 0.003074, slope = 0.00004429, color = "steelblue", linewidth = 2) +
+     scale_y_continuous(trans = "log10") + 
+     xlab("Tornado Width (Yards)") +
+     ylab("Fatalities") +
+     theme(text = element_text(size = 15), plot.title = element_blank())
+
+new_fatal_widths_plot
+```
+
+```{r}
+#| label: fig-new_fatal_length_plot
+#| fig-cap: "Fatalities vs Length Plot."
+#| fig-pos: t
+#| out-width: 80%
+#| warning: false
+
+## Note: Blue line represents predicted values based on our regression model when tornado width = 0
+new_fatal_length_plot <- ggplot(new_test_df, aes(x = length, y = fatalities)) +
+     geom_point(alpha = 0.4) +
+     # geom_line(data = fatal_predictions,
+     #       mapping = aes(x = length, y = .pred),
+     #       color = "steelblue",
+     #       linewidth = 1) +
+     geom_abline(intercept = 0.003074, slope = 0.003195, color = "steelblue", linewidth = 2) +
+     scale_y_continuous(trans = "log10") + 
+     xlab("Tornado Length (Miles)") +
+     ylab("Fatalities") +
+     theme(text = element_text(size = 15), plot.title = element_blank())
+
+new_fatal_length_plot
+```
+
+# Discussion and Results
+
+Our initial exploration of features width and length demonstrated a positive correlation with our target, fatalities. Length and fatalities show a correlation of `0.237`, whereas width and fatalities show a correlation of `0.174`. The values are small but illustrate a stronger positive relationship between length and fatalities.
+
+Before constructing our model, we performed a 75/25 split on our data for reproducibility and validity.
+
+From our multivariable linear regression model with the inclusion of outliers, we can write an equation of best fit: 
+$$
+\text{Tornado fatalities} = 0.0367960 \times (\text{length of tornado}) + 0.0007337 \times (\text{width of tornado}) - 0.1183680
+$$
+The coefficients and intercept of the equation are positive but small demonstrating that our features `length` and `width` may not have a large impact on predicting tornado fatalities. This signifies that the features may not be leading to precise predictions. Our results follow our initial exploration of the data, where we saw small positive correlations.
+
+On the other hand, we obtain an RMSPE score for this multivariable linear regression of `1.00567700` tornado fatalities (@tbl-outliers). This prediction error is very low, indicating that our model fits the data well and our predictions are more precise. 
+
+As noted in our analysis section, removing the outliers leaves us with tornadoes that cause no deaths. Nonetheless, we decided to keep the linear regression model without the outliers to observe if any differences were seen in the equation and RMSPE score. 
+
+The equation of best fit for our multilinear regression model without the outliers is: 
+$$
+\text{Tornado fatalities} = 0.0048939 \times (\text{length of tornado}) + 0.0001736 \times (\text{width of tornado}) - 0.0022491
+$$
+
+Compared to the model including outliers, the coefficients and the intercept are much smaller, implying that these features have less of an impact on predicting tornado fatalities and are more likely to lead to less precise predictions. 
+
+The RMSPE score here is `0.189469674` tornado fatalities (@tbl-outliers2), suggesting that it makes fewer errors than the model with the outliers.
+
+From @fig-widths_plot, @fig-length_plot, @fig-new_fatal_widths_plot, and @fig-new_fatal_length_plot, the plots from the model with the outliers seem more interpretable than the ones from the model without the outliers, as the slope is an almost flat one. On the other hand, by observing @fig-model_viz and @fig-new_fatal_model_viz, the plots showing the actual number of fatalities vs the predicted number of fatalities of both models, we can conclude that the reason why the model without the outliers has a lower RMSPE score is because the outliers were removed, thus making it easier to predict the fatalities that are more closely located than fatalities that are along a longer range. 
+
+Therefore, we can conclude that our model has a lower RMSPE score, which is preferable in a multilinear regression model. However, it also does not have very strong coefficients for predicting the number of fatalities. 
+
+In terms of expectations, given the small correlations that length and width have with the number of tornado fatalities, it is expected that our model does not have very large coefficients. In terms of the RMSPE score, we did not have an expectation as to how our model would perform. However, we did not expect the RMSPE score to be so low as typically if the coefficients are smaller, then they have less impact on the predictions and thus may lead to more erroneous predictions. 
+
+Despite the low coefficients of our model equations, the low RMSPE scores suggest that if this model were to be deployed to predict the number of fatalities from tornadoes in the U.S., then it may have the ability to predict them without so much error. Therefore, our model could have some utility in such aspects. 
+
+However, we believe that because of the limitations of our model, it would be interesting to observe the impact of using other features to predict the number of fatalities from tornadoes, such as `mag`. Furthermore, it could also be valuable to explore how well we could predict the number of injuries using the same features that we did, namely `length` and `width`. The total number of casualties (fatalities and injuries) could also be predicted using `length` and `width` and perhaps other features. 
+
+
+# References
+
