@@ -7,8 +7,10 @@
 # make all
 
 # create whole analysis and report 
-all: docs/tornado_fatalities_predictor.html docs/tornado_fatalities_predictor.pdf
-
+all: data \
+	results \
+	docs 
+	
 # data 
 data: data/raw/raw_tornado_data.csv \
 	data/processed/01_processed_tornado_data.csv data/processed/02_tornado_train_data.csv data/processed/03_tornado_test_data.csv data/processed/04_tornado_outlierless.csv data/processed/05_tornado_train_outlierless.csv data/processed/06_tornado_test_outlierless.csv
@@ -56,18 +58,10 @@ results/03_linear_model_test_scores_table.csv results/04_actual_vs_predicted_fat
 docs: docs/tornado_fatalities_predictor.html \
 	docs/tornado_fatalities_predictor.pdf 
 
-docs/tornado_fatalities_predictor.html: docs/tornado_fatalities_predictor.qmd \
-	docs/references.bib \
-	results/eda_01_numeric_features_summary_table.csv results/eda_02_correlation_plot.png results/eda_03_width_vs_fatalities_scatterplot.png results/eda_04_length_vs_fatalities_scatterplot.png \
-	results/01_linear_model.rds results/02_linear_model_outlierless.rds \
-	results/03_linear_model_test_scores_table.csv results/04_actual_vs_predicted_fatalities_plot.png results/05_fatalities_vs_width_plot.png results/06_fatalities_vs_length_plot.png results/07_width_outlier_boxplot.png results/08_length_outlier_boxplot.png results/09_fatalities_outlier_boxplot.png results/10_linear_model_test_scores_without_outliers_table.csv results/11_actual_vs_predicted_fatalities_plot_no_outliers.png results/12_fatalities_vs_width_plot_no_outliers.png results/13_fatalities_vs_length_plot_no_outliers.png 
+docs/tornado_fatalities_predictor.html: docs/tornado_fatalities_predictor.qmd 
 		quarto render docs/tornado_fatalities_predictor.qmd --to html
 
-docs/tornado_fatalities_predictor.pdf: docs/tornado_fatalities_predictor.qmd \
-	docs/references.bib \
-	results/eda_01_numeric_features_summary_table.csv results/eda_02_correlation_plot.png results/eda_03_width_vs_fatalities_scatterplot.png results/eda_04_length_vs_fatalities_scatterplot.png \
-	results/01_linear_model.rds results/02_linear_model_outlierless.rds \
-	results/03_linear_model_test_scores_table.csv results/04_actual_vs_predicted_fatalities_plot.png results/05_fatalities_vs_width_plot.png results/06_fatalities_vs_length_plot.png results/07_width_outlier_boxplot.png results/08_length_outlier_boxplot.png results/09_fatalities_outlier_boxplot.png results/10_linear_model_test_scores_without_outliers_table.csv results/11_actual_vs_predicted_fatalities_plot_no_outliers.png results/12_fatalities_vs_width_plot_no_outliers.png results/13_fatalities_vs_length_plot_no_outliers.png 
+docs/tornado_fatalities_predictor.pdf: docs/tornado_fatalities_predictor.qmd 
 		quarto render docs/tornado_fatalities_predictor.qmd --to pdf
 
 # clean data
