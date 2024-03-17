@@ -24,10 +24,10 @@ The final report can be found [here](https://github.com/DSCI-310-2024/DSCI-310-G
 
 2. Clone this Github repository to your local machine.
 
-3. Pull the Docker image locally for this analysis by running 
+3. Pull [our Docker image](https://hub.docker.com/layers/edsters78/tornado-fatalities-predictor/latest/images/sha256-9748ec3fb796a40c58755ad25c820658589713aa3597fa2d5d07857346fb16f5?context=repo) locally for this analysis by running: 
 
 ``` 
-docker pull docker pull edsters78/tornado-fatalities-predictor
+docker pull edsters78/tornado-fatalities-predictor
 ```
 
 #### Running the analysis
