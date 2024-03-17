@@ -10,6 +10,5 @@ RUN conda install -y --quiet \
     r-kableextra=1.4.\
     jupyter-book=0.15.1 \
     make\
-    quarto\
-    tinytex
+    quarto
     
