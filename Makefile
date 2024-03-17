@@ -55,14 +55,10 @@ results/03_linear_model_test_scores_table.csv results/04_actual_vs_predicted_fat
 	--output_path=results/
 	
 # render report
-docs: docs/tornado_fatalities_predictor.html \
-	docs/tornado_fatalities_predictor.pdf 
+docs: docs/tornado_fatalities_predictor.html
 
 docs/tornado_fatalities_predictor.html: docs/tornado_fatalities_predictor.qmd 
 		quarto render docs/tornado_fatalities_predictor.qmd --to html
-
-docs/tornado_fatalities_predictor.pdf: docs/tornado_fatalities_predictor.qmd 
-		quarto render docs/tornado_fatalities_predictor.qmd --to pdf
 
 # clean data
 clean-data: 
@@ -75,8 +71,7 @@ clean-results:
 		results/03_linear_model_test_scores_table.csv results/04_actual_vs_predicted_fatalities_plot.png results/05_fatalities_vs_width_plot.png results/06_fatalities_vs_length_plot.png results/07_width_outlier_boxplot.png results/08_length_outlier_boxplot.png results/09_fatalities_outlier_boxplot.png results/10_linear_model_test_scores_without_outliers_table.csv results/11_actual_vs_predicted_fatalities_plot_no_outliers.png results/12_fatalities_vs_width_plot_no_outliers.png results/13_fatalities_vs_length_plot_no_outliers.png
 
 clean-docs: 
-	rm -f docs/tornado_fatalities_predictor.html \
-	rm -f docs/tornado_fatalities_predictor.pdf
+	rm -f docs/tornado_fatalities_predictor.html 
 
 clean-all: clean-data \
 	clean-results \
