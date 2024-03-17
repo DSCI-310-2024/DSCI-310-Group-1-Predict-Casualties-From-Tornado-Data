@@ -10,3 +10,6 @@ RUN conda install -y --quiet \
     r-kableextra=1.4.\
     make\
     quarto
+ 
+ # Install quarto tinytex
+RUN quarto install tinytex
