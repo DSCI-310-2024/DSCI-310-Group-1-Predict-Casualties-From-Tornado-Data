@@ -1,6 +1,9 @@
-# Tornado Fatalities Predictor pipeline 
+# Makefile
+# Authors: Erika Delorme, Marcela Flaherty, Riddha Tuladhar, Edwin Yeung
+# date: 2024-03-16
 
 # Example usage: 
+# make clean-all
 # make all
 
 # create whole analysis and report 
@@ -54,7 +57,12 @@ docs: docs/tornado_fatalities_predictor.qmd \
 	docs/tornado_fatalities_predictor.html \
 	docs/tornado_fatalities_predictor.pdf 
 
-docs/tornado_fatalities_predictor.qmd: data/processed/01_processed_tornado_data.csv data/processed/02_tornado_train_data.csv data/processed/03_tornado_test_data.csv data/processed/04_tornado_outlierless.csv data/processed/05_tornado_train_outlierless.csv data/processed/06_tornado_test_outlierless.csv: src/02_clean_preprocess_data.R data/raw/raw_tornado_data.csv \
+docs/tornado_fatalities_predictor.qmd: data/processed/01_processed_tornado_data.csv \
+	data/processed/02_tornado_train_data.csv \
+	data/processed/03_tornado_test_data.csv \
+	data/processed/04_tornado_outlierless.csv \
+	data/processed/05_tornado_train_outlierless.csv \
+	data/processed/06_tornado_test_outlierless.csv \
 	results 
 
 docs/tornado_fatalities_predictor.html: docs/tornado_fatalities_predictor.qmd \
@@ -82,6 +90,7 @@ clean-results:
 		results/03_linear_model_test_scores_table.csv results/04_actual_vs_predicted_fatalities_plot.png results/05_fatalities_vs_width_plot.png results/06_fatalities_vs_length_plot.png results/07_width_outlier_boxplot.png results/08_length_outlier_boxplot.png results/09_fatalities_outlier_boxplot.png results/10_linear_model_test_scores_without_outliers_table.csv results/11_actual_vs_predicted_fatalities_plot_no_outliers.png results/12_fatalities_vs_width_plot_no_outliers.png results/13_fatalities_vs_length_plot_no_outliers.png
 
 clean-docs: 
+	rm -f dpcs/tornado_fatalities_predictor.qmd \
 	rm -f docs/tornado_fatalities_predictor.html \
 	rm -f docs/tornado_fatalities_predictor.pdf
 
