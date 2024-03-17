@@ -8,5 +8,4 @@ RUN conda install -y --quiet \
     r-ggally=2.2.1 \
     r-docopt=0.7.1 \
     r-kableextra=1.4.\
-    make\
-    quarto
+    make
