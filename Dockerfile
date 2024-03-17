@@ -11,4 +11,22 @@ RUN conda install -y --quiet \
     jupyter-book=0.15.1 \
     make\
     quarto
+
+# Quarto Installation
+
+# Use root to install system-level packages
+USER root
+
+# Install system dependencies for Quarto
+RUN apt-get update && apt-get install -y \
+    make \
+    gdebi
+
+# Download and install Quarto
+ARG QUARTO_VERSION="1.4.537"
+RUN curl -o quarto-linux-amd64.deb -L https://github.com/quarto-dev/quarto-cli/releases/download/v${QUARTO_VERSION}/quarto-${QUARTO_VERSION}-linux-amd64.deb && \
+    gdebi --non-interactive quarto-linux-amd64.deb
+
+# Switch back to the jovyan user
+USER $NB_UID
     
