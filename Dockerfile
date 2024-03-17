@@ -13,8 +13,8 @@ RUN conda install -y --quiet \
 USER ${NB_UID}
 
 ARG QUARTO_VERSION="1.4.551"
-RUN curl -o quarto-linux-amd64.deb -L https://github.com/quarto-dev/quarto-cli/releases/download/v${QUARTO_VERSION}/quarto-${QUARTO_VERSION}-linux-amd64.deb
-RUN gdebi --non-interactive quarto-linux-amd64.deb
+RUN curl -o quarto-linux-arm64.deb -L https://github.com/quarto-dev/quarto-cli/releases/download/v${QUARTO_VERSION}/quarto-${QUARTO_VERSION}-linux-arm64.deb
+RUN gdebi --non-interactive quarto-linux-arm64.deb
 
 # #And to install gdebi:
 # USER root
