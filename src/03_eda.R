@@ -55,7 +55,7 @@ main <- function(file_path, output_path) {
 
     fatalities_width_scatterplot = ggplot(data, aes(x = width, y = fatalities)) +
     geom_point(alpha = 0.4) +
-    xlab("Width (yards) of tornados") +
+    xlab("Width (yards) of tornadoes") +
     ylab("Fatalities") +
     theme(text = element_text(size = 14), plot.title = element_text(hjust = 0.5)) + 
     ggtitle("Figure 2: Scatterplot of width (yards) of tornado and fatalities")
@@ -68,7 +68,7 @@ main <- function(file_path, output_path) {
 
     fatalities_length_scatterplot = ggplot(data, aes(x = length, y = fatalities)) +
     geom_point(alpha = 0.4) +
-    xlab("Length (miles) of tornados") +
+    xlab("Length (miles) of tornadoes") +
     ylab("Fatalities") +
     theme(text = element_text(size = 14), plot.title = element_text(hjust = 0.5)) + 
     ggtitle("Figure 3: Scatterplot of length (miles) of tornado and fatalities")
