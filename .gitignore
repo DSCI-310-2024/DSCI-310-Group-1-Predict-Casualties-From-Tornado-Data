@@ -4,3 +4,10 @@
 
 # Jupyter Notebook
 **/.ipynb_checkpoints
+
+# R
+.Rproj.user
+.Rhistory
+.Rdata
+.httr-oauth
+.quarto
