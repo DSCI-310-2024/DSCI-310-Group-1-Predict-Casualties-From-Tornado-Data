@@ -18,6 +18,7 @@ suppressMessages(library(tidymodels))
 suppressMessages(library(psych))
 suppressMessages(library(GGally))
 suppressWarnings(library(docopt))
+source("R/create_scatterplot.R")
 
 # parse/define command line arguments 
 opt <- docopt(doc)
@@ -51,28 +52,18 @@ main <- function(file_path, output_path) {
     ggsave(file.path(output_path, "eda_02_correlation_plot.png"), correlations_plot)
 
     # create width vs fatalities scatterplot 
-    options(repr.plot.width = 7, repr.plot.height = 7)
-
-    fatalities_width_scatterplot = ggplot(data, aes(x = width, y = fatalities)) +
-    geom_point(alpha = 0.4) +
-    xlab("Width (yards) of tornadoes") +
-    ylab("Fatalities") +
-    theme(text = element_text(size = 14), plot.title = element_text(hjust = 0.5)) + 
-    ggtitle("Figure 2: Scatterplot of width (yards) of tornado and fatalities")
-    
+    fatalities_width_scatterplot <- create_scatterplot(data, width, fatalities) + 
+        labs(x = "Width of tornadoes (yards)", y = "Fatalities", 
+        title = "Figure 2: Scatterplot of width (yards) of tornado and fatalities")
+        
     # save plot as image png
     ggsave(file.path(output_path, "eda_03_width_vs_fatalities_scatterplot.png"), fatalities_width_scatterplot)
 
     # create length vs fatalities scatterplot 
-    options(repr.plot.width = 7, repr.plot.height = 7)
-
-    fatalities_length_scatterplot = ggplot(data, aes(x = length, y = fatalities)) +
-    geom_point(alpha = 0.4) +
-    xlab("Length (miles) of tornadoes") +
-    ylab("Fatalities") +
-    theme(text = element_text(size = 14), plot.title = element_text(hjust = 0.5)) + 
-    ggtitle("Figure 3: Scatterplot of length (miles) of tornado and fatalities")
-    
+    fatalities_length_scatterplot <- create_scatterplot(data, length, fatalities) + 
+        labs(x = "Length of tornadoes (miles)", y = "Fatalities", 
+        title = "Figure 3: Scatterplot of length (miles) of tornado and fatalities")
+        
     # save plot as image png
     ggsave(file.path(output_path, "eda_04_length_vs_fatalities_scatterplot.png"), fatalities_length_scatterplot)
  

@@ -1,0 +1,46 @@
+Environment:
+- vdiffr-svg-engine: 2.0
+- vdiffr: 1.0.7
+
+
+Failed doppelganger: create-scatterplot2 (C:\Users\kaori\DSCI-310-Group-1-Predict-Fatalities-From-Tornado-Data\tests\testthat\_snaps/create_scatterplot/create-scatterplot2.svg)
+
+< before                                                                        
+> after                                                                         
+@@ 51019,5 / 51019,5 @@                                                         
+  <text x='379.45' y='567.61' text-anchor='middle' style='font-size: 14.00px; fo
+  nt-family: sans;' textLength='170.44px' lengthAdjust='spacingAndGlyphs'>Length
+   of tornadoes (miles)</text>                                                  
+  <text transform='translate(15.11,283.14) rotate(-90)' text-anchor='middle' sty
+  le='font-size: 14.00px; font-family: sans;' textLength='56.02px' lengthAdjust=
+  'spacingAndGlyphs'>Fatalities</text>                                          
+< <text x='379.45' y='17.04' text-anchor='middle' style='font-size: 16.80px; fon
+: t-family: sans;' textLength='456.67px' lengthAdjust='spacingAndGlyphs'>Figure 
+: 3: Scatterplot of length (yards) of tornado and fatalities</text>             
+> <text x='379.45' y='17.04' text-anchor='middle' style='font-size: 16.80px; fon
+: t-family: sans;' textLength='454.79px' lengthAdjust='spacingAndGlyphs'>Figure 
+: 3: Scatterplot of length (miles) of tornado and fatalities</text>             
+  </g>                                                                          
+  </svg>                                                                        
+
+
+Failed doppelganger: create-scatterplot2 (C:\Users\kaori\DSCI-310-Group-1-Predict-Fatalities-From-Tornado-Data\tests\testthat\_snaps/create_scatterplot/create-scatterplot2.svg)
+
+< before                                                                        
+> after                                                                         
+@@ 51019,5 / 51019,5 @@                                                         
+  <text x='379.45' y='567.61' text-anchor='middle' style='font-size: 14.00px; fo
+  nt-family: sans;' textLength='170.44px' lengthAdjust='spacingAndGlyphs'>Length
+   of tornadoes (miles)</text>                                                  
+  <text transform='translate(15.11,283.14) rotate(-90)' text-anchor='middle' sty
+  le='font-size: 14.00px; font-family: sans;' textLength='56.02px' lengthAdjust=
+  'spacingAndGlyphs'>Fatalities</text>                                          
+< <text x='379.45' y='17.04' text-anchor='middle' style='font-size: 16.80px; fon
+: t-family: sans;' textLength='456.67px' lengthAdjust='spacingAndGlyphs'>Figure 
+: 3: Scatterplot of length (yards) of tornado and fatalities</text>             
+> <text x='379.45' y='17.04' text-anchor='middle' style='font-size: 16.80px; fon
+: t-family: sans;' textLength='454.79px' lengthAdjust='spacingAndGlyphs'>Figure 
+: 3: Scatterplot of length (miles) of tornado and fatalities</text>             
+  </g>                                                                          
+  </svg>                                                                        
+

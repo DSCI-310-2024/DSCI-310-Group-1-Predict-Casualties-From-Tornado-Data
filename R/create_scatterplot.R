@@ -3,28 +3,23 @@
 #' Creates a scatter plot from the provided data and specified two numerical 
 #' columns
 #'
-#' @param data A data frame 
-#' @param xcol The column name from data frame for the x-axis
-#' @param ycol The column name from data frame for the y-axis
-#' @param xlabel The label (str) for the x-axis in the scatter plot
-#' @param ylabel The label (str) for the y-axis in the scatter plot 
-#' @param title The title (str) of the scatter plot
+#' @param data data frame or tibble 
+#' @param x_col unquoted column name to plot on the x-axis from data 
+#' @param y_col unquoted column name to plot on the y-axis from data
 #'
 #' @return A scatter plot of two numerical features 
 #' @export
 #'
 #' @examples
-#' create_scatterplot(data, data$width, data$fatalities, "Width (yards) of 
-#' tornadoes", "Fatalities", "Figure 2: Scatterplot of width (yards) of 
-#' tornado and fatalities")
-create_scatterplot <- function(data, xcol, ycol, xlabel, ylabel, title) {
+#' create_scatterplot(tornado_train_data, width, fatalities) + 
+#' labs(x = "Width of tornadoes (yards)", y = "Fatalities", 
+#' title = "Figure 2: Scatterplot of width (yards) of tornado and fatalities")
+create_scatterplot <- function(data, x_col, y_col) {
   
   options(repr.plot.width = 7, repr.plot.height = 7)
 
-  fatalities_width_scatterplot = ggplot(data, aes(x = xcol, y = ycol)) +
-    geom_point(alpha = 0.4) +
-    xlab(xlabel) +
-    ylab(ylabel) +
-    theme(text = element_text(size = 14), plot.title = element_text(hjust = 0.5)) + 
-    ggtitle(title)
+  ggplot2::ggplot(data = data, 
+                  ggplot2::aes(x = {{ x_col }}, y = {{ y_col }})) +
+    ggplot2::geom_point(alpha = 0.4) +
+    theme(text = ggplot2::element_text(size = 14), plot.title = ggplot2::element_text(hjust = 0.5)) 
 }
