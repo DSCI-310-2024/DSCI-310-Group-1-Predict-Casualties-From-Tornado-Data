@@ -14,10 +14,22 @@ fatalities_length_scatterplot <- create_scatterplot(tornado_train_data,
        title = "Figure 3: Scatterplot of length (miles) of tornado and fatalities")
 fatalities_length_scatterplot 
 
+empty_df  <- data.frame()
+
+list_input <- list('hello', 'five')
+
 test_that("refactoring our code should not change our plot", {
   expect_doppelganger("create scatterplot1", fatalities_width_scatterplot)
 })
 
 test_that("refactoring our code should not change our plot", {
   expect_doppelganger("create scatterplot2", fatalities_length_scatterplot)
+})
+
+test_that("data frame should not be empty", {
+  expect_error(create_scatterplot(empty_df))
+})
+
+test_that("`data` should be a data frame", {
+  expect_error(create_scatterplot(list_input))
 })

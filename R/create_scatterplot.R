@@ -16,6 +16,12 @@
 #' title = "Figure 2: Scatterplot of width (yards) of tornado and fatalities")
 create_scatterplot <- function(data, x_col, y_col) {
   
+  if (!is.data.frame(data)) {
+    stop("`data` should be a data frame or a tibble")}
+  
+  if (nrow(data) == 0) {
+    stop("The data frame should not be empty")}
+  
   options(repr.plot.width = 7, repr.plot.height = 7)
 
   ggplot2::ggplot(data = data, 
