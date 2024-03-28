@@ -27,5 +27,5 @@ create_scatterplot <- function(data, x_col, y_col) {
   ggplot2::ggplot(data = data, 
                   ggplot2::aes(x = {{ x_col }}, y = {{ y_col }})) +
     ggplot2::geom_point(alpha = 0.4) +
-    theme(text = ggplot2::element_text(size = 14), plot.title = ggplot2::element_text(hjust = 0.5)) 
+    ggplot2::theme(text = ggplot2::element_text(size = 14), plot.title = ggplot2::element_text(hjust = 0.5)) 
 }
