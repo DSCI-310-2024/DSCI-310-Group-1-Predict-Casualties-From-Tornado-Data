@@ -6,9 +6,12 @@ test_that("refactoring our code should not change our plot", {
   expect_doppelganger("create scatterplot", body_plot)
 })
 
+test_that("The data frame should call columns that exist within the data frame", {
+  expect_error(create_scatterplot(wrong_cols_plot))
+})
 
-test_that("The data frame should not be empty", {
-  expect_error(create_scatterplot(empty_df))
+test_that("The data frame should not have empty columns", {
+  expect_error(create_scatterplot(empty_plot))
 })
 
 test_that("`data` should be a data frame", {
