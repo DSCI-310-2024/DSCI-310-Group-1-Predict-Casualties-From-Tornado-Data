@@ -14,7 +14,7 @@
 #' boxplot_viz(test_data, fatalities)
 
 boxplot_viz <- function(data_frame, col) {
-    if (!is.data.frame(data)) {
+    if (!is.data.frame(data_frame)) {
         stop("`data_frame` should be a data frame or a data frame extension")}
 
     if (nrow(data_frame) == 0) {
