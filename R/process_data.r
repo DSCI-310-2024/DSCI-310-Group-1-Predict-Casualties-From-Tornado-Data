@@ -1,6 +1,6 @@
-#' Clean Data
+#' Process Data
 #'
-#' Removes NA values and repetitive/irrelevant columns from data frame; renames column names
+#' Removes NA values in `mag` variable and repetitive/irrelevant columns from data frame; renames column names
 #' in this order given that original columns in dataset are in correct order: ID, year, month, day, time, datetime_utc, state, mag,
 #' injuries, fatalities, start_lat, start_lon, end_lat, end_lon, length, width, ns 
 #'
@@ -12,8 +12,8 @@
 #' @export
 #'
 #' @examples
-#' clean_data(raw_data)
-clean_data <- function(data_frame){
+#' process_data(raw_data)
+process_data <- function(data_frame){
   if (!is.data.frame(data_frame)) {
     stop("`data_frame` should be a data frame or data frame extension (e.g. a tibble)")
   }
@@ -32,7 +32,7 @@ clean_data <- function(data_frame){
   
   processed_data <- data_frame %>%
     dplyr::select(-date, -tz, -stf, -sn, -f1, -f2, -f3, -f4, -fc, -loss) %>%
-    tidyr::drop_na()
+    dplyr::filter(!is.na(mag))
   
   names(processed_data) <- c('ID','year','month','day','time','datetime_utc','state','mag','injuries',
                          'fatalities','start_lat','start_lon','end_lat','end_lon','length','width','ns')
