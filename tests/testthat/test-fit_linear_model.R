@@ -1,7 +1,7 @@
 library(testthat)
 library(tidymodels)
 library(dplyr)
-source("../../R/fit_model.R")
+source("../../R/fit_linear_model.R")
 
 testthat_data <- tibble(
   x = 1:10,
