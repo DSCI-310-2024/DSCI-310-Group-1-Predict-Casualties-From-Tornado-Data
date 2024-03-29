@@ -77,7 +77,6 @@ Tests are run using the `testthat` command in the root of the project. Specifica
 
 ``` 
 testthat::test_dir("tests/testthat")
-
 ``` 
 More details about the test suite can be found in the [tests](https://github.com/DSCI-310-2024/DSCI-310-Group-1-Predict-Fatalities-From-Tornado-Data/tree/main/tests/testthat) directory. 
 
