@@ -12,7 +12,7 @@ Options:
 suppressMessages(library(tidyverse))
 suppressMessages(library(tidymodels))
 suppressWarnings(library(docopt))
-source("R/fit_model.R")
+source("R/fit_linear_model.R")
 
 opt <- docopt(doc)
 
