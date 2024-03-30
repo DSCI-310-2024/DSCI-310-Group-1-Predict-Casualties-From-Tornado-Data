@@ -68,7 +68,7 @@ main <- function(raw_data, data_to, seed) {
     write.csv(outlierless_df, file.path(data_to, "04_tornado_outlierless.csv"))
   
     # split save outlierless data into training and testind data to designated filepaths
-    outlierless_data_split <- initial_split(clean_data, prop = 0.75, strata = fatalities)
+    outlierless_data_split <- initial_split(outlierless_df, prop = 0.75, strata = fatalities)
     outlierless_train_df <- training(outlierless_data_split)
     outlierless_test_df <- testing(outlierless_data_split)
   
