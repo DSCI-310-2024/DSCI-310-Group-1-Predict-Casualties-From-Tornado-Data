@@ -18,31 +18,24 @@ suppressMessages(library(tidymodels))
 suppressMessages(library(psych))
 suppressMessages(library(GGally))
 suppressWarnings(library(docopt))
+source("R/create_scatterplot.R")
 
 # parse/define command line arguments 
 opt <- docopt(doc)
 
-# create summary table 
-create_summary_table <- function(file_path, output_path) {
+#  define main function 
+main <- function(file_path, output_path) {
   
     # read in data
     data <- read_csv(file_path)
-  
+    
     # create summary table 
     summary_table <- data.frame(describe(data[, c('mag', 'injuries', 'fatalities', 'start_lat', 
                 'start_lon', 'end_lat', 'end_lon', 'length', 'width', 'ns')], fast = TRUE))
 
     # save table as csv            
     write_csv(summary_table, file.path(output_path,"eda_01_numeric_features_summary_table.csv"))
-  
-}
-
-# create correlation plot
-create_correlation_plot <- function(file_path, output_path) {
-  
-    # read in data
-    data <- read_csv(file_path)
-  
+    
     # create correlation plot 
     options(repr.plot.width = 10, repr.plot.height = 10)
 
@@ -57,69 +50,23 @@ create_correlation_plot <- function(file_path, output_path) {
     
     # save plot as image png
     ggsave(file.path(output_path, "eda_02_correlation_plot.png"), correlations_plot)
- 
-}
 
-# create scatterplot width vs fatalities
-create_scatterplot_width_fatalities <- function(file_path, output_path) {
-  
-    # read in data
-    data <- read_csv(file_path)
-  
-    # create scatterplot 
-    options(repr.plot.width = 7, repr.plot.height = 7)
-
-    fatalities_width_scatterplot = ggplot(data, aes(x = width, y = fatalities)) +
-    geom_point(alpha = 0.4) +
-    xlab("Width (yards) of tornados") +
-    ylab("Fatalities") +
-    theme(text = element_text(size = 14), plot.title = element_text(hjust = 0.5)) + 
-    ggtitle("Figure 2: Scatterplot of width (yards) of tornado and fatalities")
-    
+    # create width vs fatalities scatterplot 
+    fatalities_width_scatterplot <- create_scatterplot(data, width, fatalities) + 
+        labs(x = "Width of tornadoes (yards)", y = "Fatalities", 
+        title = "Figure 2: Scatterplot of width (yards) of tornado and fatalities")
+        
     # save plot as image png
     ggsave(file.path(output_path, "eda_03_width_vs_fatalities_scatterplot.png"), fatalities_width_scatterplot)
- 
-}
 
-# create scatterplot length vs fatalities 
-create_scatterplot_length_fatalities <- function(file_path, output_path) {
-  
-    # read in data
-    data <- read_csv(file_path)
-  
-    # create scatterplot 
-    options(repr.plot.width = 7, repr.plot.height = 7)
-
-    fatalities_length_scatterplot = ggplot(data, aes(x = length, y = fatalities)) +
-    geom_point(alpha = 0.4) +
-    xlab("Length (miles) of tornados") +
-    ylab("Fatalities") +
-    theme(text = element_text(size = 14), plot.title = element_text(hjust = 0.5)) + 
-    ggtitle("Figure 3: Scatterplot of length (miles) of tornado and fatalities")
-    
+    # create length vs fatalities scatterplot 
+    fatalities_length_scatterplot <- create_scatterplot(data, length, fatalities) + 
+        labs(x = "Length of tornadoes (miles)", y = "Fatalities", 
+        title = "Figure 3: Scatterplot of length (miles) of tornado and fatalities")
+        
     # save plot as image png
     ggsave(file.path(output_path, "eda_04_length_vs_fatalities_scatterplot.png"), fatalities_length_scatterplot)
  
-}
-
-#  define main function 
-main <- function(file_path, output_path) {
-  
-    # read in data
-    data <- read_csv(file_path, output_path)
-    
-    # create summary table 
-    create_summary_table(file_path, output_path)
-    
-    # create correlation matrix 
-    create_correlation_plot(file_path, output_path)
-
-    # create width vs fatalities scatterplot 
-    create_scatterplot_width_fatalities(file_path, output_path)
-
-    # create length vs fatalities scatterplot 
-    create_scatterplot_length_fatalities(file_path, output_path)
-  
 }
 
 main(opt$file_path, opt$output_path)
