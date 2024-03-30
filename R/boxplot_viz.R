@@ -15,10 +15,15 @@
 
 boxplot_viz <- function(data_frame, col) {
     if (!is.data.frame(data_frame)) {
-        stop("`data_frame` should be a data frame or a data frame extension")}
+        stop("`data_frame` should be a data frame or a data frame extension")
+    }
 
     if (nrow(data_frame) == 0) {
         stop("'data_frame' should not be empty")
+    }
+
+    if (!(deparse(substitute(col)) %in% colnames(data_frame))) {
+      stop("'col' should be a column name in the data frame")
     }
 
     options(repr.plot.width = 7, repr.plot.height = 7)

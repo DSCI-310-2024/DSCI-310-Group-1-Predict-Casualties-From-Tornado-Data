@@ -7,9 +7,14 @@ test_that("refactoring our code should not change our plot", {
 })
 
 test_that("The data frame should not be empty", {
-  expect_error(boxplot_viz(empty_df, test_boxplot_data))
+  expect_error(boxplot_viz(empty_df, fatalities))
+})
+
+test_that("'col' should be a column name in the data frame", {
+  expect_error(boxplot_viz(test_boxplot_data, missing_col))
 })
 
 test_that("`data` should be a data frame", {
-  expect_error(boxplot_viz(list_input, test_boxplot_data))
+  expect_error(boxplot_viz(list_input, fatalities))
 })
+
