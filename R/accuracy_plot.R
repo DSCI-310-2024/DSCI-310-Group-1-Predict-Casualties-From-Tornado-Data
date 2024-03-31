@@ -11,7 +11,7 @@
 #'
 #' @examples
 #' accuracy_plot(fatal_predictions, fatalities) + 
-#' labs(x = "Actual Number of Fatalities"), y = "Predicted Number of Fatalities")
+#' labs(x = "Actual Number of Fatalities", y = "Predicted Number of Fatalities")
 
 accuracy_plot <- function(predictions, pred_var) {
     if (!is.data.frame(predictions)) {
