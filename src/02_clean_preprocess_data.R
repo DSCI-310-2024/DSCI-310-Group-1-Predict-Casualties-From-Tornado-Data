@@ -18,6 +18,7 @@ suppressMessages(library(repr))
 suppressMessages(library(tidymodels))
 suppressMessages(library(psych))
 suppressMessages(library(GGally))
+source("R/process_data.R")
 
 opt <- docopt(doc)
 
@@ -26,15 +27,9 @@ main <- function(raw_data, data_to, seed) {
     # read raw data
     data <- read_csv(raw_data)
 
-    # remove irrelevant or repetitive columns; filter for NA in magnitude
-    clean_data <- data %>%
-    select(-date, -tz, -stf, -sn, -f1, -f2, -f3, -f4, -fc, -loss) %>%
-    filter(!is.na(mag))
+    # remove irrelevant or repetitive columns; filter for NA in magnitude; change feature names to be more descriptive
+    clean_data <- process_data(data)
 
-    # change feature names to be more descriptive
-    names(clean_data) <- c('ID','year','month','day','time','datetime_utc','state','mag','injuries',
-                  'fatalities','start_lat','start_lon','end_lat','end_lon','length','width','ns')
-    
     # save processed dataset to specified directory/filepath
     write_csv(clean_data, file.path(data_to, "01_processed_tornado_data.csv"))
 
@@ -73,7 +68,7 @@ main <- function(raw_data, data_to, seed) {
     write.csv(outlierless_df, file.path(data_to, "04_tornado_outlierless.csv"))
   
     # split save outlierless data into training and testind data to designated filepaths
-    outlierless_data_split <- initial_split(clean_data, prop = 0.75, strata = fatalities)
+    outlierless_data_split <- initial_split(outlierless_df, prop = 0.75, strata = fatalities)
     outlierless_train_df <- training(outlierless_data_split)
     outlierless_test_df <- testing(outlierless_data_split)
   

@@ -71,6 +71,14 @@ docker compose run --rm analysis-env bash
 ```
 To exit the container and clean up, enter `exit` in the terminal.
 
+#### Running the tests 
+
+Tests are run using the `testthat` command in the root of the project. Specifically, running the following command in a R terminal will run the tests: 
+
+``` 
+testthat::test_dir("tests/testthat")
+``` 
+More details about the test suite can be found in the [tests](https://github.com/DSCI-310-2024/DSCI-310-Group-1-Predict-Fatalities-From-Tornado-Data/tree/main/tests/testthat) directory. 
 
 ## License 
 
