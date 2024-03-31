@@ -16,6 +16,7 @@ Options:
 suppressMessages(library(tidyverse))
 suppressMessages(library(tidymodels))
 suppressWarnings(library(docopt))
+source("R/boxplot_viz.R")
 
 opt <- docopt(doc)
 
@@ -98,24 +99,34 @@ main <- function(test_data, outlierless_test, lin_fit, lin_fit_outlierless, outp
   ggsave(file.path(output_path, "06_fatalities_vs_length_plot.png"), fatal_length_plot)
   
   # Create and store boxplot for tornado widths
-  width_boxplot <- ggplot(test_df, aes(y = width)) +
-    geom_boxplot() +
+  # width_boxplot <- ggplot(test_df, aes(y = width)) +
+  #   geom_boxplot() +
+  #   ggtitle("Boxplot of Tornado Widths") +
+  #   labs(x = "Tornado Width (Yards)", y = "Values")
+  width_boxplot <- boxplot_viz(test_df, width) +
     ggtitle("Boxplot of Tornado Widths") +
     labs(x = "Tornado Width (Yards)", y = "Values")
 
   ggsave(file.path(output_path, "07_width_outlier_boxplot.png"), width_boxplot)
 
   # Create and store boxplot for tornado lengths
-  length_boxplot <- ggplot(test_df, aes(y = length)) +
-    geom_boxplot() +
+  # length_boxplot <- ggplot(test_df, aes(y = length)) +
+  #   geom_boxplot() +
+  #   ggtitle("Boxplot of Tornado Lengths") +
+  #   labs(x = "Tornado Length (Miles)", y = "Values")
+  length_boxplot <- boxplot_viz(test_df, length) +
     ggtitle("Boxplot of Tornado Lengths") +
     labs(x = "Tornado Length (Miles)", y = "Values")
   
   ggsave(file.path(output_path, "08_length_outlier_boxplot.png"), length_boxplot)
 
   # Create and store boxplot for tornado fatalities
-  fatalities_boxplot <- ggplot(test_df, aes(y = fatalities)) +
-    geom_boxplot() +
+  # fatalities_boxplot <- ggplot(test_df, aes(y = fatalities)) +
+  #   geom_boxplot() +
+  #   ggtitle("Boxplot of Tornado Fatalities") +
+  #   labs(x = "Number of Fatalities", y = "Values")
+
+  fatalities_boxplot <- boxplot_viz(test_df, fatalities) +
     ggtitle("Boxplot of Tornado Fatalities") +
     labs(x = "Number of Fatalities", y = "Values")
   
