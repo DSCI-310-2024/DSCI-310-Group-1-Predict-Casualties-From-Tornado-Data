@@ -12,7 +12,7 @@ The data set that was used in this project is from the US NOAA's National Weathe
 
 ## Report 
 
-The final report can be found [here](https://github.com/DSCI-310-2024/DSCI-310-Group-1-Predict-Fatalities-From-Tornado-Data/blob/main/src/tornado_fatalities_predictor.ipynb). 
+The final report can be found [here](https://github.com/DSCI-310-2024/DSCI-310-Group-1-Predict-Fatalities-From-Tornado-Data/blob/update-readme-report-section/docs/tornado_fatalities_predictor.qmd). 
 
 ## Dependencies
 [Docker](https://www.docker.com/) is a container solution used to manage software dependencies for this project. The docker image in this project is based on the `quay.io/jupyter/r-notebook:r-4.3.2` image. Additional dependencies can be found in the [`Dockerfile`](Dockerfile).
