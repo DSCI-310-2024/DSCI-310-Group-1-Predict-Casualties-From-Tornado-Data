@@ -26,7 +26,7 @@ This project will be using a data set from the US NOAA’s Storm Prediction Cent
 
 ## Data wrangling and cleaning
 
-The R programming language [@R]  and the following R packages were used to conduct our analysis: repr [@repr], tidyverse [@Wickham2017], tidymodels [@Kuhn2023], psych [@Revelle2019], and GGally [@Schloerke2020].
+The R programming language [@R]  and the following R packages were used to conduct our analysis: repr [@repr], tidyverse [@Wickham2017], tidymodels [@Kuhn2023], psych [@Revelle2019], GGally [@Schloerke2020].
 
 The code used to perform the analysis and create this report can be found here: [https://github.com/DSCI-310-2024/DSCI-310-Group-1-Predict-Fatalities-From-Tornado-Data/blob/main/src/tornado_fatalities_predictor.ipynb](https://github.com/DSCI-310-2024/DSCI-310-Group-1-Predict-Fatalities-From-Tornado-Data/blob/main/src/tornado_fatalities_predictor.ipynb). 
 
