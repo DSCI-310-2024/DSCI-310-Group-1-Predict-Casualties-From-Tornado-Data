@@ -82,7 +82,7 @@ More details about the test suite can be found in the [tests](https://github.com
 
 ## License 
 
-The tornado fatalities predictor report is under the Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0) License. See the license file for more information. The software code contained within this repository is licensed under the MIT license. See the license file for more information. 
+The tornado fatalities predictor report is under the Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0) License. See the license file for more information. The software code contained within this repository is licensed under the MIT license. See the [license file](https://github.com/DSCI-310-2024/DSCI-310-Group-1-Predict-Fatalities-From-Tornado-Data/blob/main/LICENSE.md) for more information. 
 
 ## References 
 
