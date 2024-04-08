@@ -212,8 +212,25 @@ lm_test_results <- lm_fit |>
   bind_cols(test_df) |>
   metrics(truth = fatalities, estimate = .pred)
 
+lm_train_results <- lm_fit |>
+  predict(train_df) |>
+  bind_cols(train_df) |>
+  metrics(truth = fatalities, estimate = .pred)
+
+test_rmse <- lm_test_results %>%
+  filter(.metric == "rmse")
+
+train_rmse <- lm_train_results %>%
+  filter(.metric == "rmse")
+
+lm_test_results <- bind_rows(
+  mutate(test_rmse, dataset = "Test"),
+  mutate(train_rmse, dataset = "Train")
+)
+
 knitr::kable(lm_test_results)
 ```
+
 10.We can visualize our linear regression model to get a better idea of how well it performs.
 
 ```{r}
@@ -395,12 +412,29 @@ knitr::kable(tidy(new_lm_fit))
 ```{r}
 #| label: tbl-outliers2
 #| tbl-cap: "Results from model without outliers."
+#| warning: false
 
 # Use new_lm_fit to predict on new_test_df and output RMSPE to assess model's test error
 new_lm_test_results <- new_lm_fit |>
   predict(new_test_df) |>
   bind_cols(new_test_df) |>
   metrics(truth = fatalities, estimate = .pred)
+
+new_lm_train_results <- new_lm_fit |>
+  predict(new_train_df) |>
+  bind_cols(new_train_df) |>
+  metrics(truth = fatalities, estimate = .pred)
+
+test_rmse2 <- new_lm_test_results %>%
+  filter(.metric == "rmse")
+
+train_rmse2 <- new_lm_train_results %>%
+  filter(.metric == "rmse")
+
+new_lm_test_results <- bind_rows(
+  mutate(test_rmse2, dataset = "Test"),
+  mutate(train_rmse2, dataset = "Train")
+)
 
 knitr::kable(new_lm_test_results)
 ```
