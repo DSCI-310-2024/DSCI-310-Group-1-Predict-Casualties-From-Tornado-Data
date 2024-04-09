@@ -13,16 +13,16 @@
 #' @examples
 #' fit_linear_model(fatalities ~ width + length, train_data)
 fit_linear_model <- function(formula, data) {
-  lm_spec <- linear_reg() %>%
-    set_engine("lm") %>%
-    set_mode("regression")
-  
-  lm_recipe <- recipe(formula, data = data)
-  
-  lm_fit <- workflow() %>%
-    add_recipe(lm_recipe) %>%
-    add_model(lm_spec) %>%
-    fit(data = data)
-  
+  lm_spec <- parsnip::linear_reg() %>%
+    parsnip::set_engine("lm") %>%
+    parsnip::set_mode("regression")
+
+  lm_recipe <- recipes::recipe(formula, data = data)
+
+  lm_fit <- workflows::workflow() %>%
+    workflows::add_recipe(lm_recipe) %>%
+    workflows::add_model(lm_spec) %>%
+    parsnip::fit(data = data)
+
   return(lm_fit)
 }
