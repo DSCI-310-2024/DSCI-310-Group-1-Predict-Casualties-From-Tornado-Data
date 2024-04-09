@@ -14,7 +14,7 @@ bibliography: references.bib
 
 # Summary
 
-In our project, we attempt to build a multilinear regression model that will predict the number of fatalities from tornadoes using the features width (yards) and length (miles) of the tornado. We tested our multilinear regression model with and without outliers and compared differences in coefficients and RMSPE scores. Both models had low positive coefficients, suggesting a minimal yet positive impact on the prediction of tornado fatalities, and both had low RMSPE scores, suggesting a low amount of error in its predictions. The model without outliers had a lower RMSPE score, which is partly explained by the lack of outliers and thus making predictions on a smaller range, which reduces the error. Despite the limitations of our model, we believe that it can still have some utility in predicting tornado fatalities with little error. However, the model should be improved in the future before being deployed to improve the size of the coefficients and its predictive power. In the future, we may consider exploring other features in predicting fatalities, predicting the number of injuries from the same features, or even predicting the number of casualties (injuries and fatalities) from the same and additional features. 
+In our project, we attempt to build a multilinear regression model that will predict the number of fatalities from tornadoes using the features width (yards) and length (miles) of the tornado. We tested our multilinear regression model with and without outliers and compared differences in coefficients and RMSPE scores. RMSPE, or Root Mean Square Percentage Error, quantifies the average percentage discrepancy between our model’s predictions of testing data and the actual observed tornado fatality figures, crucial for assessing the prediction accuracy. Both models had low positive coefficients, suggesting a minimal yet positive impact on the prediction of tornado fatalities, and both had low RMSPE scores, suggesting a low amount of error in its predictions. The model without outliers had a lower RMSPE score, which is partly explained by the lack of outliers and thus making predictions on a smaller range, which reduces the error. Despite the limitations of our model, we believe that it can still have some utility in predicting tornado fatalities with little error. However, the model should be improved in the future before being deployed to improve the size of the coefficients and its predictive power. In the future, we may consider exploring other features in predicting fatalities, predicting the number of injuries from the same features, or even predicting the number of casualties (injuries and fatalities) from the same and additional features.  
 
 # Introduction
 
@@ -212,8 +212,25 @@ lm_test_results <- lm_fit |>
   bind_cols(test_df) |>
   metrics(truth = fatalities, estimate = .pred)
 
+lm_train_results <- lm_fit |>
+  predict(train_df) |>
+  bind_cols(train_df) |>
+  metrics(truth = fatalities, estimate = .pred)
+
+test_rmse <- lm_test_results %>%
+  filter(.metric == "rmse")
+
+train_rmse <- lm_train_results %>%
+  filter(.metric == "rmse")
+
+lm_test_results <- bind_rows(
+  mutate(test_rmse, dataset = "Test"),
+  mutate(train_rmse, dataset = "Train")
+)
+
 knitr::kable(lm_test_results)
 ```
+
 10.We can visualize our linear regression model to get a better idea of how well it performs.
 
 ```{r}
@@ -395,12 +412,29 @@ knitr::kable(tidy(new_lm_fit))
 ```{r}
 #| label: tbl-outliers2
 #| tbl-cap: "Results from model without outliers."
+#| warning: false
 
 # Use new_lm_fit to predict on new_test_df and output RMSPE to assess model's test error
 new_lm_test_results <- new_lm_fit |>
   predict(new_test_df) |>
   bind_cols(new_test_df) |>
   metrics(truth = fatalities, estimate = .pred)
+
+new_lm_train_results <- new_lm_fit |>
+  predict(new_train_df) |>
+  bind_cols(new_train_df) |>
+  metrics(truth = fatalities, estimate = .pred)
+
+test_rmse2 <- new_lm_test_results %>%
+  filter(.metric == "rmse")
+
+train_rmse2 <- new_lm_train_results %>%
+  filter(.metric == "rmse")
+
+new_lm_test_results <- bind_rows(
+  mutate(test_rmse2, dataset = "Test"),
+  mutate(train_rmse2, dataset = "Train")
+)
 
 knitr::kable(new_lm_test_results)
 ```
