@@ -26,7 +26,7 @@ This project will be using a data set from the US NOAA’s Storm Prediction Cent
 
 ## Data wrangling and cleaning
 
-The R programming language [@R]  and the following R packages were used to conduct our analysis: repr [@repr], tidyverse [@Wickham2017], tidymodels [@Kuhn2023], psych [@Revelle2019], GGally [@Schloerke2020].
+The R programming language [@R]  and the following R packages were used to conduct our analysis: `repr` [@repr], `tidyverse` [@Wickham2017], `tidymodels` [@Kuhn2023], `psych` [@Revelle2019], and `GGally` [@Schloerke2020].
 
 The code used to perform the analysis and create this report can be found here: [https://github.com/DSCI-310-2024/DSCI-310-Group-1-Predict-Fatalities-From-Tornado-Data/blob/main/src/tornado_fatalities_predictor.ipynb](https://github.com/DSCI-310-2024/DSCI-310-Group-1-Predict-Fatalities-From-Tornado-Data/blob/main/src/tornado_fatalities_predictor.ipynb). 
 
@@ -61,7 +61,7 @@ knitr::kable(sapply(tornado_data, function(x) sum(is.na(x))))%>%
   kableExtra::kable_styling(bootstrap_options = c("striped", "hover", "condensed"))
 ```
 
-  We can see that there are no missing values, except for the feature `loss`, with 27,170 missing values and 756 missing values for the feature mag.  The feature `loss` refers to the financial loss of each tornado. For our regression problem, we did not deem this feature to be an important feature. Therefore, we decide to remove this column. Because there are not so many rows missing for the feature `mag`, we decide to filter those rows out. 
+  We can see that there are no missing values, except for the feature `loss`, with 27,170 missing values and 756 missing values for the feature `mag`. The feature `loss` refers to the financial loss of each tornado. For our regression problem, we did not deem this feature to be an important feature. Therefore, we decide to remove this column. Because there are not so many rows missing for the feature `mag`, we decide to filter those rows out. 
 
 4.Then, we remove irrelevant or repetitive columns and then filter for missing values of the column `mag`, which stands for magnitude. Then, we change the feature names to make them more descriptive. We show the top 6 rows of our cleaned data. 
 
@@ -529,7 +529,7 @@ new_fatal_length_plot
 
 
 # Discussion and Results
-Our initial exploration of features width and length demonstrated a positive correlation with our target, fatalities. Length and fatalities show a correlation of `0.237`, whereas width and fatalities show a correlation of `0.174`. The values are small but illustrate a stronger positive relationship between length and fatalities.
+Our initial exploration of features `width` and `length` demonstrated a positive correlation with our target, fatalities. Length and fatalities show a correlation of `0.237`, whereas width and fatalities show a correlation of `0.174`. The values are small but illustrate a stronger positive relationship between length and fatalities.
 
 Before constructing our model, we performed a 75/25 split on our data for reproducibility and validity.
 
