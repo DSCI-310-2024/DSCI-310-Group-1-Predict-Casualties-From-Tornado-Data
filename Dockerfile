@@ -1,5 +1,14 @@
 FROM quay.io/jupyter/r-notebook:r-4.3.2
 
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+
+USER root
+
+RUN sudo -S \
+    apt-get update && apt-get install -y \
+    make \
+    gdebi
+
 # Install R packages
 RUN conda install -y --quiet \
     nb_conda_kernels=2.3.1 \
@@ -13,12 +22,6 @@ RUN conda install -y --quiet \
     jupyter-book=0.15.1
 
 # To get specific version of quarto
-USER root
-RUN sudo -S \
-    apt-get update && apt-get install -y \
-    make \
-    gdebi
-
 ARG QUARTO_VERSION="1.4.537"
 RUN curl -o quarto-linux-amd64.deb -L https://github.com/quarto-dev/quarto-cli/releases/download/v${QUARTO_VERSION}/quarto-${QUARTO_VERSION}-linux-amd64.deb
 RUN gdebi --non-interactive quarto-linux-amd64.deb
