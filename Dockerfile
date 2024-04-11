@@ -14,6 +14,7 @@ RUN conda install -y --quiet \
     make
 
 # To get specific version of quarto
+USER root
 ARG QUARTO_VERSION="1.4.537"
 RUN curl -o quarto-linux-amd64.deb -L https://github.com/quarto-dev/quarto-cli/releases/download/v${QUARTO_VERSION}/quarto-${QUARTO_VERSION}-linux-amd64.deb
 RUN gdebi --non-interactive quarto-linux-amd64.deb
