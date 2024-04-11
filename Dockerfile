@@ -11,8 +11,11 @@ RUN conda install -y --quiet \
     r-vdiffr=1.0.7 \
     r-testthat=3.2.0 \
     jupyter-book=0.15.1 \
-    make\
-    quarto
+    make
+
+ARG QUARTO_VERSION="1.4.537"
+RUN curl -o quarto-linux-amd64.deb -L https://github.com/quarto-dev/quarto-cli/releases/download/v${QUARTO_VERSION}/quarto-${QUARTO_VERSION}-linux-amd64.deb
+RUN gdebi --non-interactive quarto-linux-amd64.deb
 
 
     
