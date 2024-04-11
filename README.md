@@ -22,7 +22,11 @@ The final report can be found [here](https://github.com/DSCI-310-2024/DSCI-310-G
 #### Setup
 1. [Install](https://www.docker.com/get-started/) Docker and launch it on your local machine.
 
-2. Clone this Github repository to your local machine.
+2. Clone this Github repository to your local machine. To do this, first navigate to the directory where you want to clone this project on your local machine. Afterwards, run the following in the terminal to clone the project repository:
+
+```
+git clone https://github.com/DSCI-310-2024/DSCI-310-Group-1-Predict-Fatalities-From-Tornado-Data.git
+```
 
 3. Pull [our Docker image](https://hub.docker.com/layers/edsters78/tornado-fatalities-predictor/latest/images/sha256-9748ec3fb796a40c58755ad25c820658589713aa3597fa2d5d07857346fb16f5?context=repo) locally for this analysis by running: 
 
