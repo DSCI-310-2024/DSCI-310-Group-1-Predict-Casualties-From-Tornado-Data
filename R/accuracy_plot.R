@@ -25,7 +25,8 @@ accuracy_plot <- function(predictions, pred_var) {
 
     ggplot2::ggplot(predictions, ggplot2::aes(x = {{ pred_var }},  y = .pred)) + 
         ggplot2::geom_point(alpha = 0.6) +
-        ggplot2::geom_abline(intercept = 0, slope = 1, color = "red", linetype = "dashed", linewidth = 2)+
+        ggplot2::geom_abline(aes(intercept = 0, slope = 1, linetype = 'Target Line'), 
+                            color = "red", linetype = "dashed", linewidth = 2)+
         ggplot2::scale_x_continuous(trans = "log10") +
         ggplot2::theme(text = ggplot2::element_text(size = 14), plot.title = ggplot2::element_text(hjust = 0.5))
 }
