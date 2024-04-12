@@ -38,6 +38,7 @@ suppressPackageStartupMessages(library(tidyverse))
 suppressPackageStartupMessages(library(tidymodels))
 suppressPackageStartupMessages(library(psych))
 suppressPackageStartupMessages(library(GGally))
+suppressPackageStartupMessages(library(predicttornado))
 ```
 
 2.Then, we read in the data about tornadoes directly from the website. 
