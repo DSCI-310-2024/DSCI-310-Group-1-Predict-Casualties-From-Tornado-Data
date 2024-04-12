@@ -18,7 +18,7 @@ suppressMessages(library(tidymodels))
 suppressMessages(library(psych))
 suppressMessages(library(GGally))
 suppressWarnings(library(docopt))
-source("R/create_scatterplot.R")
+suppressMessages(library(predicttornado))
 
 # parse/define command line arguments 
 opt <- docopt(doc)

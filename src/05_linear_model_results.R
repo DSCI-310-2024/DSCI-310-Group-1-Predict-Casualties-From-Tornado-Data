@@ -16,9 +16,7 @@ Options:
 suppressMessages(library(tidyverse))
 suppressMessages(library(tidymodels))
 suppressWarnings(library(docopt))
-source("R/accuracy_plot.R")
-source("R/create_scatterplot.R")
-source("R/boxplot_viz.R")
+suppressMessages(library(predicttornado))
 
 opt <- docopt(doc)
 
