@@ -23,22 +23,27 @@ source("R/boxplot_viz.R")
 opt <- docopt(doc)
 
 boxplots <- function(test_data, output_path) {
+  transformed_test_data <- test_data |>
+    mutate(width = log(width)) |>
+    mutate(length = log(length)) |>
+    mutate(fatalities = log(fatalities))
+
   # Create and store boxplot for tornado widths
-  width_boxplot <- boxplot_viz(test_data, width) +
+  width_boxplot <- boxplot_viz(transformed_test_data, width) +
     ggtitle("Boxplot of Tornado Widths") +
     labs(x = "Tornado Width (Yards)", y = "Values")
 
   ggsave(file.path(output_path, "07_width_outlier_boxplot.png"), width_boxplot)
 
   # Create and store boxplot for tornado lengths
-  length_boxplot <- boxplot_viz(test_data, length) +
+  length_boxplot <- boxplot_viz(transformed_test_data, length) +
     ggtitle("Boxplot of Tornado Lengths") +
     labs(x = "Tornado Length (Miles)", y = "Values")
   
   ggsave(file.path(output_path, "08_length_outlier_boxplot.png"), length_boxplot)
 
   # Create and store boxplot for tornado fatalities
-  fatalities_boxplot <- boxplot_viz(test_data, fatalities) +
+  fatalities_boxplot <- boxplot_viz(transformed_test_data, fatalities) +
     ggtitle("Boxplot of Tornado Fatalities") +
     labs(x = "Number of Fatalities", y = "Values")
   
