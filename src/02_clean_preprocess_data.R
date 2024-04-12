@@ -18,7 +18,7 @@ suppressMessages(library(repr))
 suppressMessages(library(tidymodels))
 suppressMessages(library(psych))
 suppressMessages(library(GGally))
-source("R/process_data.R")
+suppressMessages(library(predicttornado))
 
 opt <- docopt(doc)
 
