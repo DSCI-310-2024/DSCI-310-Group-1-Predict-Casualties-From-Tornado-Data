@@ -222,37 +222,6 @@ main <- function(test_data, outlierless_test, lin_fit, lin_fit_outlierless, outp
                     outlierless_tornado_length,
                     outlierless_tornado_width,
                     output_path)
-  
-  # # Create and store scatter plot comparing accuracy of the linear model without outliers
-  # ## Note: Red line represents where points would be plotted if the model was 100% accurate
-  # outlierless_model_viz <- accuracy_plot(outlierless_fatal_predictions, fatalities) +
-  #   xlab("Actual Number of Fatalities") +
-  #   ylab("Predicted Number of Fatalities") +
-  #   ggtitle("Actual Number of Fatalities vs Predicted Number of Fatalities")
-  
-  # ggsave(file.path(output_path, "11_actual_vs_predicted_fatalities_plot_no_outliers.png"), outlierless_model_viz)
-  
-  # # Create and store scatter plot for tornado width with linear regression line
-  # ## Note: Blue line represents predicted values based on our regression model when tornado length = 0
-  # outlierless_widths_plot <- create_scatterplot(outlierless_test_df, width, fatalities) +
-  #   geom_abline(intercept = outlierless_intercept, slope = outlierless_tornado_width, color = "steelblue", linewidth = 2) +
-  #   scale_y_continuous(trans = "log10") + 
-  #   xlab("Tornado Width (Yards)") +
-  #   ylab("Fatalities") +
-  #   ggtitle("Fatalities vs Width Plot")
-  
-  # ggsave(file.path(output_path, "12_fatalities_vs_width_plot_no_outliers.png"), outlierless_widths_plot)
-  
-  # # Create and store scatter plot for tornado length with linear regression line
-  # ## Note: Blue line represents predicted values based on our regression model when tornado width = 0
-  # outlierless_length_plot <- create_scatterplot(outlierless_test_df, length, fatalities) +
-  #   geom_abline(intercept = outlierless_intercept, slope = outlierless_tornado_length, color = "steelblue", linewidth = 2) +
-  #   scale_y_continuous(trans = "log10") + 
-  #   xlab("Tornado Length (Miles)") +
-  #   ylab("Fatalities") +
-  #   ggtitle("Fatalities vs Length Plot")
-  
-  # ggsave(file.path(output_path, "13_fatalities_vs_length_plot_no_outliers.png"), outlierless_length_plot)
 }
 
 main(opt$test_data, opt$outlierless_test, opt$lin_fit, opt$lin_fit_outlierless, opt$output_path)
