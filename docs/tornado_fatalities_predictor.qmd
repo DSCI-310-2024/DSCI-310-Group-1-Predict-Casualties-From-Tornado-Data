@@ -245,6 +245,21 @@ fatal_rsmpe <- lm_test_results |>
 fatal_predictions <- lm_fit |>
     predict(test_df) |>
     bind_cols(test_df)
+
+intercept <- tidy(lm_fit) |>
+    filter(term == "(Intercept)") |>
+    select(estimate) |>
+    pull()
+
+  tornado_length <- tidy(lm_fit) |>
+    filter(term == "length") |>
+    select(estimate) |>
+    pull()
+
+  tornado_width <- tidy(lm_fit) |>
+    filter(term == "width") |>
+    select(estimate) |>
+    pull()
 ```
 
 ```{r}
@@ -446,6 +461,21 @@ new_fatal_rsmpe <- new_lm_test_results |>
 new_fatal_predictions <- new_lm_fit |>
     predict(new_test_df) |>
     bind_cols(new_test_df)
+  
+outlierless_intercept <- tidy(new_lm_fit) |>
+  filter(term == "(Intercept)") |>
+  select(estimate) |>
+  pull()
+  
+outlierless_tornado_length <- tidy(new_lm_fit) |>
+  filter(term == "length") |>
+  select(estimate) |>
+  pull()
+  
+outlierless_tornado_width <- tidy(new_lm_fit) |>
+  filter(term == "width") |>
+  select(estimate) |>
+  pull()
 ```
 
 ```{r}
@@ -475,8 +505,8 @@ new_fatal_model_viz
 #| warning: false
 
 ## Note: Blue line represents predicted values based on our regression model when tornado length = 0
-new_fatal_widths_plot <- create_scatterplot(new_test_df), width, fatalities) +
-    geom_abline(aes(intercept = intercept, slope = tornado_width, linetype = "Regression Line"), 
+new_fatal_widths_plot <- create_scatterplot(new_test_df, width, fatalities) +
+    geom_abline(aes(intercept = outlierless_intercept, slope = outlierless_tornado_width, linetype = "Regression Line"), 
                 color = "steelblue", linewidth = 2) +
     scale_y_continuous(trans = "log10") +
     xlab("Tornado Width (Yards)") +
@@ -495,7 +525,7 @@ new_fatal_widths_plot
 
 ## Note: Blue line represents predicted values based on our regression model when tornado width = 0
 new_fatal_length_plot <- create_scatterplot(new_test_df, length, fatalities) +
-    geom_abline(aes(intercept = intercept, slope = tornado_length, linetype = "Regression Line"), 
+    geom_abline(aes(intercept = outlierless_intercept, slope = outlierless_tornado_length, linetype = "Regression Line"), 
                 color = "steelblue", linewidth = 2) +
     scale_y_continuous(trans = "log10") +
     xlab("Tornado Length (Miles)") +
