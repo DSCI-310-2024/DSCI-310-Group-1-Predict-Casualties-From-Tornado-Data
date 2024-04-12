@@ -245,6 +245,21 @@ fatal_rsmpe <- lm_test_results |>
 fatal_predictions <- lm_fit |>
     predict(test_df) |>
     bind_cols(test_df)
+
+intercept <- tidy(lm_fit) |>
+    filter(term == "(Intercept)") |>
+    select(estimate) |>
+    pull()
+
+  tornado_length <- tidy(lm_fit) |>
+    filter(term == "length") |>
+    select(estimate) |>
+    pull()
+
+  tornado_width <- tidy(lm_fit) |>
+    filter(term == "width") |>
+    select(estimate) |>
+    pull()
 ```
 
 ```{r}
@@ -255,17 +270,10 @@ fatal_predictions <- lm_fit |>
 #| warning: false
 
 ## Note: Red line represents where points would be plotted if the model was 100% accurate
-fatal_model_viz <- ggplot(fatal_predictions, aes(x = fatalities, y = .pred)) +
-    geom_point(alpha = 0.6) +
-    # geom_line(data = fatal_predictions,
-    #        mapping = aes(x = fatalities, y = .pred),
-    #        color = "steelblue",
-    #        linewidth = 1) +
-    geom_abline(intercept = 0, slope = 1, color = "red", linetype = "dashed", linewidth = 2)+
-    scale_x_continuous(trans = "log10") + 
+fatal_model_viz <- accuracy_plot(fatal_predictions, fatalities) +
     xlab("Actual Number of Fatalities") +
-    ylab("Predicted Number of Fatalities")+
-    theme(text = element_text(size = 14), plot.title = element_blank())
+    ylab("Predicted Number of Fatalities") +
+    ggtitle("Actual Number of Fatalities vs Predicted Number of Fatalities")
 
 fatal_model_viz
 ```
@@ -278,17 +286,13 @@ fatal_model_viz
 #| warning: false
 
 ## Note: Blue line represents predicted values based on our regression model when tornado length = 0
-fatal_widths_plot <- ggplot(test_df, aes(x = width, y = fatalities)) +
-     geom_point(alpha = 0.4) +
-     # geom_line(data = fatal_predictions,
-     #       mapping = aes(x = width, y = .pred),
-     #       color = "steelblue",
-     #       linewidth = 1) +
-     geom_abline(intercept = -0.1183670, slope = 0.0007337, color = "steelblue", linewidth = 2) +
-     scale_y_continuous(trans = "log10") + 
-     xlab("Tornado Width (Yards)") +
-     ylab("Fatalities") +
-     theme(text = element_text(size = 15), plot.title = element_blank())
+fatal_widths_plot <- create_scatterplot(test_df, width, fatalities) +
+    geom_abline(aes(intercept = intercept, slope = tornado_width, linetype = "Regression Line"), 
+                    color = "steelblue", linewidth = 2) +
+    scale_y_continuous(trans = "log10") + 
+    xlab("Tornado Width (Yards)") +
+    ylab("Fatalities") +
+    ggtitle("Fatalities vs Width Plot")
 
 fatal_widths_plot
 ```
@@ -301,17 +305,13 @@ fatal_widths_plot
 #| warning: false
 
 ## Note: Blue line represents predicted values based on our regression model when tornado width = 0
-fatal_length_plot <- ggplot(test_df, aes(x = length, y = fatalities)) +
-     geom_point(alpha = 0.4) +
-     # geom_line(data = fatal_predictions,
-     #       mapping = aes(x = length, y = .pred),
-     #       color = "steelblue",
-     #       linewidth = 1) +
-     geom_abline(intercept = -0.1183670, slope = 0.0367960, color = "steelblue", linewidth = 2) +
-     scale_y_continuous(trans = "log10") + 
-     xlab("Tornado Length (Miles)") +
-     ylab("Fatalities") +
-     theme(text = element_text(size = 15), plot.title = element_blank())
+fatal_length_plot <- create_scatterplot(test_df, length, fatalities) +
+    geom_abline(aes(intercept = intercept, slope = tornado_length, linetype = "Regression Line"),
+                    color = "steelblue", linewidth = 2) +
+    scale_y_continuous(trans = "log10") + 
+    xlab("Tornado Length (Miles)") +
+    ylab("Fatalities") +
+    ggtitle("Fatalities vs Length Plot")
 
 fatal_length_plot
 ```
@@ -329,33 +329,43 @@ Note that, as the majority of tornadoes cause no fatalities and thus removing th
 #| warning: false
 
 # Checking for outliers
-boxplot(df$width, ylab = "Values", xlab = "Tornado Width (Yards)")
+transformed_test_data <- test_df |>
+    mutate(width = log(width)) |>
+    mutate(length = log(length)) |>
+    mutate(fatalities = log(fatalities))
 
-
+width_boxplot <- boxplot_viz(transformed_test_data, width) +
+    ggtitle("Boxplot of Tornado Widths") +
+    labs(x = "Tornado Width (Yards)", y = "Values")
+width_boxplot
 ```
 
 ```{r}
 #| label: fig-box2
-#| fig-cap: "Boxplot of Tornado Widths."
+#| fig-cap: "Boxplot of Tornado Lengths."
 #| fig-pos: 'h'
 #| out-width: 35%
 #| warning: false
 
 # Checking for outliers
-boxplot(df$length, ylab = "Values", xlab = "Tornado Length (Miles)")
-
+length_boxplot <- boxplot_viz(transformed_test_data, length) +
+    ggtitle("Boxplot of Tornado Lengths") +
+    labs(x = "Tornado Length (Miles)", y = "Values")
+length_boxplot
 ```
 
 ```{r}
 #| label: fig-box3
-#| fig-cap: "Boxplot of Tornado Widths."
+#| fig-cap: "Boxplot of Tornado Fatalities."
 #| fig-pos: 'h'
 #| out-width: 35%
 #| warning: false
 ## Checking for outliers
 
-boxplot(df$fatalities, ylab = "Values", xlab = "Number of Fatalities")
-
+fatalities_boxplot <- boxplot_viz(transformed_test_data, fatalities) +
+    ggtitle("Boxplot of Tornado Fatalities") +
+    labs(x = "Number of Fatalities", y = "Values")
+fatalities_boxplot
 ```
 $$\\$$
 
@@ -451,6 +461,21 @@ new_fatal_rsmpe <- new_lm_test_results |>
 new_fatal_predictions <- new_lm_fit |>
     predict(new_test_df) |>
     bind_cols(new_test_df)
+  
+outlierless_intercept <- tidy(new_lm_fit) |>
+  filter(term == "(Intercept)") |>
+  select(estimate) |>
+  pull()
+  
+outlierless_tornado_length <- tidy(new_lm_fit) |>
+  filter(term == "length") |>
+  select(estimate) |>
+  pull()
+  
+outlierless_tornado_width <- tidy(new_lm_fit) |>
+  filter(term == "width") |>
+  select(estimate) |>
+  pull()
 ```
 
 ```{r}
@@ -461,17 +486,10 @@ new_fatal_predictions <- new_lm_fit |>
 #| warning: false
 
 ## Note: Red line represents where points would be plotted if the model was 100% accurate
-new_fatal_model_viz <- ggplot(new_fatal_predictions, aes(x = fatalities, y = .pred)) +
-    geom_point(alpha = 0.6) +
-    # geom_line(data = fatal_predictions,
-    #        mapping = aes(x = fatalities, y = .pred),
-    #        color = "steelblue",
-    #        linewidth = 1) +
-    geom_abline(intercept = 0, slope = 1, color = "red", linetype = "dashed", linewidth = 2)+
-    scale_x_continuous(trans = "log10") + 
+new_fatal_model_viz <- accuracy_plot(new_fatal_predictions, fatalities) +
     xlab("Actual Number of Fatalities") +
     ylab("Predicted Number of Fatalities") +
-    theme(text = element_text(size = 15), plot.title = element_blank())
+    ggtitle("Actual Number of Fatalities vs Predicted Number of Fatalities")
 
 new_fatal_model_viz
 ```
@@ -487,17 +505,13 @@ new_fatal_model_viz
 #| warning: false
 
 ## Note: Blue line represents predicted values based on our regression model when tornado length = 0
-new_fatal_widths_plot <- ggplot(new_test_df, aes(x = width, y = fatalities)) +
-     geom_point(alpha = 0.4) +
-     # geom_line(data = fatal_predictions,
-     #       mapping = aes(x = width, y = .pred),
-     #       color = "steelblue",
-     #       linewidth = 1) +
-     geom_abline(intercept = 0.003074, slope = 0.00004429, color = "steelblue", linewidth = 2) +
-     scale_y_continuous(trans = "log10") + 
-     xlab("Tornado Width (Yards)") +
-     ylab("Fatalities") +
-     theme(text = element_text(size = 15), plot.title = element_blank())
+new_fatal_widths_plot <- create_scatterplot(new_test_df, width, fatalities) +
+    geom_abline(aes(intercept = outlierless_intercept, slope = outlierless_tornado_width, linetype = "Regression Line"), 
+                color = "steelblue", linewidth = 2) +
+    scale_y_continuous(trans = "log10") +
+    xlab("Tornado Width (Yards)") +
+    ylab("Fatalities") +
+    ggtitle("Fatalities vs Width Plot")
 
 new_fatal_widths_plot
 ```
@@ -510,17 +524,13 @@ new_fatal_widths_plot
 #| warning: false
 
 ## Note: Blue line represents predicted values based on our regression model when tornado width = 0
-new_fatal_length_plot <- ggplot(new_test_df, aes(x = length, y = fatalities)) +
-     geom_point(alpha = 0.4) +
-     # geom_line(data = fatal_predictions,
-     #       mapping = aes(x = length, y = .pred),
-     #       color = "steelblue",
-     #       linewidth = 1) +
-     geom_abline(intercept = 0.003074, slope = 0.003195, color = "steelblue", linewidth = 2) +
-     scale_y_continuous(trans = "log10") + 
-     xlab("Tornado Length (Miles)") +
-     ylab("Fatalities") +
-     theme(text = element_text(size = 15), plot.title = element_blank())
+new_fatal_length_plot <- create_scatterplot(new_test_df, length, fatalities) +
+    geom_abline(aes(intercept = outlierless_intercept, slope = outlierless_tornado_length, linetype = "Regression Line"), 
+                color = "steelblue", linewidth = 2) +
+    scale_y_continuous(trans = "log10") +
+    xlab("Tornado Length (Miles)") +
+    ylab("Fatalities") +
+    ggtitle("Fatalities vs Length Plot")
 
 new_fatal_length_plot
 ```
