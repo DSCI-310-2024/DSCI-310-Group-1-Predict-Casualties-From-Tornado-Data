@@ -12,7 +12,7 @@ RUN conda install -y --quiet \
     r-testthat=3.2.0 \
     jupyter-book=0.15.1 \
     quarto=1.4.550 \
-    make=4.3
+    make
 
 
     
