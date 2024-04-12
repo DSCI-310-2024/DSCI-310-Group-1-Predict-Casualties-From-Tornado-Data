@@ -21,22 +21,27 @@ suppressMessages(library(predicttornado))
 opt <- docopt(doc)
 
 boxplots <- function(test_data, output_path) {
+  transformed_test_data <- test_data |>
+    mutate(width = log(width)) |>
+    mutate(length = log(length)) |>
+    mutate(fatalities = log(fatalities))
+
   # Create and store boxplot for tornado widths
-  width_boxplot <- boxplot_viz(test_data, width) +
+  width_boxplot <- boxplot_viz(transformed_test_data, width) +
     ggtitle("Boxplot of Tornado Widths") +
     labs(x = "Tornado Width (Yards)", y = "Values")
 
   ggsave(file.path(output_path, "07_width_outlier_boxplot.png"), width_boxplot)
 
   # Create and store boxplot for tornado lengths
-  length_boxplot <- boxplot_viz(test_data, length) +
+  length_boxplot <- boxplot_viz(transformed_test_data, length) +
     ggtitle("Boxplot of Tornado Lengths") +
     labs(x = "Tornado Length (Miles)", y = "Values")
   
   ggsave(file.path(output_path, "08_length_outlier_boxplot.png"), length_boxplot)
 
   # Create and store boxplot for tornado fatalities
-  fatalities_boxplot <- boxplot_viz(test_data, fatalities) +
+  fatalities_boxplot <- boxplot_viz(transformed_test_data, fatalities) +
     ggtitle("Boxplot of Tornado Fatalities") +
     labs(x = "Number of Fatalities", y = "Values")
   
@@ -61,7 +66,8 @@ outlier_plots <- function(test_data, predictions, intercept, tornado_length, tor
   # Create and store scatter plot for tornado width with linear regression line
   ## Note: Blue line represents predicted values based on our regression model when tornado length = 0
   fatal_widths_plot <- create_scatterplot(test_data, width, fatalities) +
-    geom_abline(intercept = intercept, slope = tornado_width, color = "steelblue", linewidth = 2) +
+    geom_abline(aes(intercept = intercept, slope = tornado_width, linetype = "Regression Line"), 
+                    color = "steelblue", linewidth = 2) +
     scale_y_continuous(trans = "log10") + 
     xlab("Tornado Width (Yards)") +
     ylab("Fatalities") +
@@ -72,7 +78,8 @@ outlier_plots <- function(test_data, predictions, intercept, tornado_length, tor
   # Create and store scatter plot for tornado length with linear regression line
   ## Note: Blue line represents predicted values based on our regression model when tornado width = 0
 fatal_length_plot <- create_scatterplot(test_data, length, fatalities) +
-    geom_abline(intercept = intercept, slope = tornado_length, color = "steelblue", linewidth = 2) +
+    geom_abline(aes(intercept = intercept, slope = tornado_length, linetype = "Regression Line"),
+                    color = "steelblue", linewidth = 2) +
     scale_y_continuous(trans = "log10") + 
     xlab("Tornado Length (Miles)") +
     ylab("Fatalities") +
@@ -97,8 +104,9 @@ outlierless_plots <- function(test_data, predictions, intercept, tornado_length,
   # Create and store scatter plot for tornado width with linear regression line
   ## Note: Blue line represents predicted values based on our regression model when tornado length = 0
   outlierless_widths_plot <- create_scatterplot(test_data, width, fatalities) +
-    geom_abline(intercept = intercept, slope = tornado_width, color = "steelblue", linewidth = 2) +
-    scale_y_continuous(trans = "log10") + 
+    geom_abline(aes(intercept = intercept, slope = tornado_width, linetype = "Regression Line"), 
+                color = "steelblue", linewidth = 2) +
+    scale_y_continuous(trans = "log10") +
     xlab("Tornado Width (Yards)") +
     ylab("Fatalities") +
     ggtitle("Fatalities vs Width Plot")
@@ -108,8 +116,9 @@ outlierless_plots <- function(test_data, predictions, intercept, tornado_length,
   # Create and store scatter plot for tornado length with linear regression line
   ## Note: Blue line represents predicted values based on our regression model when tornado width = 0
   outlierless_length_plot <- create_scatterplot(test_data, length, fatalities) +
-    geom_abline(intercept = intercept, slope = tornado_length, color = "steelblue", linewidth = 2) +
-    scale_y_continuous(trans = "log10") + 
+    geom_abline(aes(intercept = intercept, slope = tornado_length, linetype = "Regression Line"), 
+                color = "steelblue", linewidth = 2) +
+    scale_y_continuous(trans = "log10") +
     xlab("Tornado Length (Miles)") +
     ylab("Fatalities") +
     ggtitle("Fatalities vs Length Plot")
@@ -211,37 +220,6 @@ main <- function(test_data, outlierless_test, lin_fit, lin_fit_outlierless, outp
                     outlierless_tornado_length,
                     outlierless_tornado_width,
                     output_path)
-  
-  # # Create and store scatter plot comparing accuracy of the linear model without outliers
-  # ## Note: Red line represents where points would be plotted if the model was 100% accurate
-  # outlierless_model_viz <- accuracy_plot(outlierless_fatal_predictions, fatalities) +
-  #   xlab("Actual Number of Fatalities") +
-  #   ylab("Predicted Number of Fatalities") +
-  #   ggtitle("Actual Number of Fatalities vs Predicted Number of Fatalities")
-  
-  # ggsave(file.path(output_path, "11_actual_vs_predicted_fatalities_plot_no_outliers.png"), outlierless_model_viz)
-  
-  # # Create and store scatter plot for tornado width with linear regression line
-  # ## Note: Blue line represents predicted values based on our regression model when tornado length = 0
-  # outlierless_widths_plot <- create_scatterplot(outlierless_test_df, width, fatalities) +
-  #   geom_abline(intercept = outlierless_intercept, slope = outlierless_tornado_width, color = "steelblue", linewidth = 2) +
-  #   scale_y_continuous(trans = "log10") + 
-  #   xlab("Tornado Width (Yards)") +
-  #   ylab("Fatalities") +
-  #   ggtitle("Fatalities vs Width Plot")
-  
-  # ggsave(file.path(output_path, "12_fatalities_vs_width_plot_no_outliers.png"), outlierless_widths_plot)
-  
-  # # Create and store scatter plot for tornado length with linear regression line
-  # ## Note: Blue line represents predicted values based on our regression model when tornado width = 0
-  # outlierless_length_plot <- create_scatterplot(outlierless_test_df, length, fatalities) +
-  #   geom_abline(intercept = outlierless_intercept, slope = outlierless_tornado_length, color = "steelblue", linewidth = 2) +
-  #   scale_y_continuous(trans = "log10") + 
-  #   xlab("Tornado Length (Miles)") +
-  #   ylab("Fatalities") +
-  #   ggtitle("Fatalities vs Length Plot")
-  
-  # ggsave(file.path(output_path, "13_fatalities_vs_length_plot_no_outliers.png"), outlierless_length_plot)
 }
 
 main(opt$test_data, opt$outlierless_test, opt$lin_fit, opt$lin_fit_outlierless, opt$output_path)
